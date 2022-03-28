@@ -6,7 +6,7 @@ export default function App() {
   return (
     <View
       flex={1}
-      backgroundColor='#fff'
+      backgroundColor='#96BDC6'
       alignItems='center'
       justifyContent='center'
       paddingTop={80}
