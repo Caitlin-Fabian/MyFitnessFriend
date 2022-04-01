@@ -16,7 +16,6 @@ const ProfilePicture = () =>{
                 <View style= {styles.titleBar}>
                 <Text style ={styles.userName}> Caitlin Fabian </Text>
                 </View>
-
             </ScrollView>
        
 
