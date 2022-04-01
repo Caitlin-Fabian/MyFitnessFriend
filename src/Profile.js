@@ -1,30 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, Text,ScrollView, View, Button, Dimensions,Image, Ionicons} from 'react-native';
+import React from 'react';
+import { SafeAreaView } from 'react-native-web';
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-function getPicture(){
-    return (
-        <View style={styles.container}>
-        <Image
-            source ={require("assets\favicon.png")}
-            //Round shape
-            style={{
-                width: 200,
-                height: 200,
-                borderRadius: 200 / 2
-              }}
-        />
+const ProfilePicture = () =>{
 
-        </View>
-    )
+    return(
+            <ScrollView>
+            
+                <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
+                <View style= {styles.titleBar}>
+                <Text style ={styles.userName}> Caitlin Fabian </Text>
+                </View>
+
+            </ScrollView>
+       
+
+    );
+    
 }
 
-// Profile Screen
-function ProfileScreen(){
-    return(
+const ProfileScreen = () => {
+    const{user, logout} = userContext([]);
+    
+    
+}
+
+// Main profile function
+function Profile(){
+    return (
         <View
             flex = {1}
             backgroundColor = '#96BDC6'
@@ -35,20 +43,14 @@ function ProfileScreen(){
             width = {screenWidth}
             height = {screenHeight}
         >
-            <ProfilePicture />
+        
+            <ProfilePicture/>
+            
 
         </View>
-    )
-}
-
-function ProfilePicture(){
-    return(
-        <View
-        flex = {1}
-        
-        ></View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -63,5 +65,26 @@ const styles = StyleSheet.create({
         margin: 10,
         fontWeight: 'bold'
     },
+    userName:{
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    userImg:{
+        height: 150,
+        width: 150,
+        borderRadius: 75,
+
+    },
+    titleBar: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 24,
+        marginHorizontal: 16
+    }
 
 });
+
+export default Profile;
