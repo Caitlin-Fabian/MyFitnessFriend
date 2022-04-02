@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 
+//TODO alot of things and figure out drop downs and buttons
+
 //Variables to get the width and height of the screen (That way it works for any screensize(?))
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -9,7 +11,7 @@ const screenHeight = Dimensions.get("window").height;
 
 
 const tableConfig = {
-    
+
 }
 
 
