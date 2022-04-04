@@ -16,6 +16,15 @@ const ProfilePicture = () =>{
                 <View style= {styles.titleBar}>
                 <Text style ={styles.userName}> Caitlin Fabian </Text>
                 </View>
+                <View>
+                    <Text style = {styles.titleBar}> Gender: </Text>
+                </View>
+                <View>
+                    <Text style = {styles.titleBar}> Age: </Text>
+                </View>
+                <View>
+                    <Text style = {styles.titleBar}> Height: </Text>
+                </View>
             </ScrollView>
        
 
@@ -42,10 +51,7 @@ function Profile(){
             width = {screenWidth}
             height = {screenHeight}
         >
-        
             <ProfilePicture/>
-            
-
         </View>
     );
 }
