@@ -1,13 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text,ScrollView, View, Button, Dimensions,Image, Ionicons} from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Ionicons } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-web';
+import NavBar from './NavBar';
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const ProfilePicture = () =>{
+const ProfilePicture = () => {
 
     return(
             <ScrollView>
@@ -29,27 +30,27 @@ const ProfilePicture = () =>{
        
 
     );
-    
+
 }
 
 const ProfileScreen = () => {
-    const{user, logout} = userContext([]);
-    
-    
+    const { user, logout } = userContext([]);
+
+
 }
 
 // Main profile function
-function Profile(){
+function Profile({ navigation }) {
     return (
         <View
-            flex = {1}
-            backgroundColor = '#96BDC6'
-            alignItems = 'center'
-            justifyContent = 'center'
-            paddingTop ={20}
-            paddingBottom = {80}
-            width = {screenWidth}
-            height = {screenHeight}
+            flex={1}
+            backgroundColor='#96BDC6'
+            alignItems='center'
+            justifyContent='center'
+            paddingTop={20}
+            paddingBottom={80}
+            width={screenWidth}
+            height={screenHeight}
         >
             <ProfilePicture/>
         </View>
@@ -64,20 +65,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
-    headerText:{
+    headerText: {
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
         fontWeight: 'bold'
     },
-    userName:{
+    userName: {
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
         marginTop: 10,
         marginBottom: 10,
     },
-    userImg:{
+    userImg: {
         height: 150,
         width: 150,
         borderRadius: 75,

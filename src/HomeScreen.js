@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Dimensions } from 'react-native';
+import { Text, View, Dimensions, Button } from 'react-native';
 import React, { useState } from 'react';
 import { LineChart } from 'react-native-chart-kit';
 import NavBar from './NavBar';
@@ -10,34 +10,16 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 
-
-
-
-//Queries an API to get a daily inspirational quote and returns the quote string
-function getQuote() {
-    console.log("Querying data");
-    return new Promise((res, rej) => {
-        fetch('https://quotes.rest/qod.json')
-            .then(result => {
-                return result.json();
-            })
-            .then(data => {
-                res(data.contents.quotes[0].quote);
-            })
-    })
-}
-
-
 //Main homepage
-function HomeScreen() {
+function HomeScreen({ navigation }) {
     return (
         <View
             flex={1}
             backgroundColor='#96BDC6'
             alignItems='center'
             justifyContent='center'
-            paddingTop={20}
-            paddingBottom={80}
+            paddingTop={screenHeight * 0.1}
+            paddingBottom={screenHeight * 0.15}
             width={screenWidth}
             height={screenHeight}
         >
@@ -46,7 +28,7 @@ function HomeScreen() {
             <CheesyQuote />
             <Graph />
             <StatusBar style="auto" showHideTransition={'fade'} />
-            <NavBar />
+            <NavBar navigation={navigation} />
         </View>
     );
 }
@@ -88,16 +70,41 @@ const WelcomeText = (props) => {
     );
 }
 
+
+//Queries an API to get a daily inspirational quote and returns the quote string
+function getQuote() {
+    console.log("Querying data");
+    return new Promise((res, rej) => {
+        fetch('https://quotes.rest/qod.json')
+            .then(result => {
+                return result.json();
+            })
+            .then(data => {
+                res(data.contents.quotes[0]);
+            })
+            .catch(err => {
+                rej(err);
+            })
+    })
+}
+
+
 //Component that holds the inspirational quote
 const CheesyQuote = () => {
     const [quote, setQuote] = useState(false);
     const [inspo, setInspo] = useState("");
+    const [author, setAuthor] = useState("");
     //If the quote has already been retrieved from API don't query for another
     if (!quote) {
         getQuote()
             .then(result => {
                 setQuote(true);
-                setInspo(result);
+                setInspo(result.quote);
+                setAuthor(result.author);
+            })
+            .catch(err => {
+                setQuote(false);
+                console.log(`Error querying API: ${err}`);
             })
     }
     return (
@@ -115,7 +122,7 @@ const CheesyQuote = () => {
             backgroundColor='#E8CCBF'
         >
 
-            <Text style={{ fontSize: 15, fontWeight: '300' }} >{quote ? inspo : "Loading"}</Text>
+            <Text style={{ fontSize: 15, fontWeight: '350' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
         </View>
     )
 }
@@ -135,6 +142,7 @@ const chartConfig = {
 
 //Component that holds the graph, rn I just put random numbers in there
 const Graph = () => {
+    const [weights, setWeights] = useState([180, 185, 190, 185, 180, 180, 185]);
     return (
         <View
             flex={3}
@@ -151,15 +159,7 @@ const Graph = () => {
                 labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 datasets: [
                     {
-                        data: [
-                            Math.random() * 20 + 180,
-                            Math.random() * 20 + 180,
-                            Math.random() * 20 + 180,
-                            Math.random() * 20 + 180,
-                            Math.random() * 20 + 180,
-                            Math.random() * 20 + 180,
-                            Math.random() * 20 + 180
-                        ]
+                        data: weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
                     }
                 ]
             }}
@@ -169,6 +169,7 @@ const Graph = () => {
                 chartConfig={chartConfig}
                 withInnerLines={false}
                 withOuterLines={false}
+                bezier
                 style={{
                     borderColor: 'black',
                     borderWidth: 1,
@@ -180,6 +181,14 @@ const Graph = () => {
     );
 }
 
+
+const ButtonToGoToProfile = ({ navigation }) => {
+    return (
+        <View>
+            <Button title="Go to Profile" onPress={() => navigation.navigate('Profile')}>Hello</Button>
+        </View>
+    );
+}
 
 
 export default HomeScreen;
