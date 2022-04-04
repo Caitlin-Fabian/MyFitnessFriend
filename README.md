@@ -1,7 +1,6 @@
 # MyFitnessFriend
 
 ## Instructions
----
 When you clone the repo run:
 ``` npm install ```  
 To get all the updated packages  
