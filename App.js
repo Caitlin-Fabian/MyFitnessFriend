@@ -6,6 +6,8 @@ import Profile from './src/Profile'
 import CalorieTracker from './src/CalorieTracker'
 import ExerciseRoutines from './src/ExcerciseRoutines';
 import ExerciseIntervals from './src/ExcerciseInterval';
+import LoginScreen from './src/LoginScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -15,14 +17,13 @@ export default function App() {
 
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='HomeScreen'
+        initialRouteName='LoginScreen'
         screenOptions={{ headerShown: true }}
-
       >
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{ headerShown: false }}
         />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="CalorieTracker" component={CalorieTracker} />
