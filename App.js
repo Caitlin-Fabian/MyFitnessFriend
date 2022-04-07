@@ -25,7 +25,6 @@ export default function App() {
         setUser(user)
       }
     })
-    setUser(auth)
     console.log("Here is the auth: ", auth);
   }, [])
 

@@ -1,21 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar';import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Ionicons } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-web';
 import NavBar from './NavBar';
+import auth from '@react-native-firebase/auth';
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const ProfilePicture = () => {
+const ProfilePicture = (props) => {
 
     return(
             <ScrollView>
             
                 <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
                 <View style= {styles.titleBar}>
-                <Text style ={styles.userName}> Caitlin Fabian </Text>
+                <Text style ={styles.userName}> {props.user} </Text>
                 </View>
                 <View>
                     <Text style = {styles.titleBar}> Gender: </Text>
@@ -26,18 +25,19 @@ const ProfilePicture = () => {
                 <View>
                     <Text style = {styles.titleBar}> Height: </Text>
                 </View>
+                <View > 
+                <Button
+                    title="Log Out"
+                    onPress = {() => auth.signOut()}>
+                </Button>
+                </View>
             </ScrollView>
        
 
     );
 
-}
-
-const ProfileScreen = () => {
-    const { user, logout } = userContext([]);
-
-
-}
+    }
+  
 
 // Main profile function
 function Profile({ navigation }) {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         marginTop: 24,
         marginHorizontal: 16
     }
-
+   
 });
 
 export default Profile;
