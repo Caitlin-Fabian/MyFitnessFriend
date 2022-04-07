@@ -7,8 +7,8 @@ import CalorieTracker from './src/CalorieTracker'
 import ExerciseRoutines from './src/ExcerciseRoutines';
 import ExerciseIntervals from './src/ExcerciseInterval';
 import RegistrationScreen from './src/RegistrationScreen';
-import Login from './src/LoginScreen';
 import NavBar from './src/NavBar';
+import LoginScreen from './src/LoginScreen';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
@@ -19,9 +19,7 @@ export default function App() {
 
   const [user, setUser] = useState(null);
 
-  function getUser() {
 
-  }
 
   useEffect(() => {
     const auth = getAuth();
