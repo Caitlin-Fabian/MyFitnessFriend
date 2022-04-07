@@ -7,8 +7,8 @@ import CalorieTracker from './src/CalorieTracker'
 import ExerciseRoutines from './src/ExcerciseRoutines';
 import ExerciseIntervals from './src/ExcerciseInterval';
 import RegistrationScreen from './src/RegistrationScreen';
-import LoginScreen from './src/LoginScreen';
 import NavBar from './src/NavBar';
+import LoginScreen from './src/LoginScreen';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
@@ -18,7 +18,6 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
