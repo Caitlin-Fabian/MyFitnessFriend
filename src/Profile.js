@@ -10,14 +10,24 @@ const screenHeight = Dimensions.get("window").height;
 
 const ProfilePicture = () => {
 
-    return (
-        <ScrollView>
-
-            <Image source={{ uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg" }} style={styles.userImg}></Image>
-            <View style={styles.titleBar}>
-                <Text style={styles.userName}> Caitlin Fabian </Text>
-            </View>
-        </ScrollView>
+    return(
+            <ScrollView>
+            
+                <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
+                <View style= {styles.titleBar}>
+                <Text style ={styles.userName}> Caitlin Fabian </Text>
+                </View>
+                <View>
+                    <Text style = {styles.titleBar}> Gender: </Text>
+                </View>
+                <View>
+                    <Text style = {styles.titleBar}> Age: </Text>
+                </View>
+                <View>
+                    <Text style = {styles.titleBar}> Height: </Text>
+                </View>
+            </ScrollView>
+       
 
     );
 
@@ -42,8 +52,7 @@ function Profile({ navigation }) {
             width={screenWidth}
             height={screenHeight}
         >
-            <ProfilePicture />
-            <NavBar navigation={navigation} />
+            <ProfilePicture/>
         </View>
     );
 }

@@ -1,8 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, Dimensions, Button } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
 import NavBar from './NavBar';
+import { getAuth, signOut } from "firebase/auth";
+import User from '../database/user';
+
+
 
 
 //Variables to get the width and height of the screen (That way it works for any screensize(?))
@@ -11,7 +15,18 @@ const screenHeight = Dimensions.get("window").height;
 
 
 //Main homepage
-function HomeScreen({ navigation }) {
+function HomeScreen(props) {
+
+    const [displayName, setDisplayName] = useState("");
+
+    useEffect(async () => {
+      const user = new User();
+      const userData = await user.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
+      if(userData != null) {
+        setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
+      }
+
+    })
     return (
         <View
             flex={1}
@@ -24,11 +39,11 @@ function HomeScreen({ navigation }) {
             height={screenHeight}
         >
             <AppHeader />
-            <WelcomeText daily='100' max='2000' />
+            <WelcomeText daily='100' max='2000' displayName={displayName} />
             <CheesyQuote />
             <Graph />
             <StatusBar style="auto" showHideTransition={'fade'} />
-            <NavBar navigation={navigation} />
+            <NavBar navigation={props.navigation} />
         </View>
     );
 }
@@ -64,6 +79,7 @@ const WelcomeText = (props) => {
             height={screenHeight * 0.25}
             backgroundColor='#E8CCBF'
         >
+            <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName}</Text>
             <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
             <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
         </View>
@@ -122,7 +138,7 @@ const CheesyQuote = () => {
             backgroundColor='#E8CCBF'
         >
 
-            <Text style={{ fontSize: 15, fontWeight: '350' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
+            <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
         </View>
     )
 }
