@@ -10,21 +10,28 @@ const screenHeight = Dimensions.get("window").height;
 
 const ProfilePicture = () => {
 
+    
+    useEffect =()=>{ 
+        const auth = getAuth();
+        const user = new User();
+        const userData = user.getUserinfo(auth.currentUser.uid);
+    }
+
     return(
             <ScrollView>
             
                 <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
                 <View style= {styles.titleBar}>
-                <Text style ={styles.userName}> Caitlin Fabian </Text>
+                <Text style ={styles.userName}> {userData.displayName} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> Gender: </Text>
+                    <Text style = {styles.titleBar}> {userData.Gender} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> Age: </Text>
+                    <Text style = {styles.titleBar}> {userData.age} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> Height: </Text>
+                    <Text style = {styles.titleBar}> {userData.height} </Text>
                 </View>
             </ScrollView>
        

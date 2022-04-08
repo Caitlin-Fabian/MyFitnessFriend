@@ -25,6 +25,9 @@ class User {
                         //Adds a new document to the database that stores all the info that we should(?) need for the user.  The title of the doc is the uid for easy finding
                         setDoc(doc(db, 'users', user.uid), {
                             uid: user.uid,
+                            gender: "",
+                            age: 0,
+                            height: 0,
                             weightData: [],
                             workOuts: [],
                             calories: [],
@@ -57,5 +60,6 @@ class User {
       }
     }
 }
+
 
 export default User;
