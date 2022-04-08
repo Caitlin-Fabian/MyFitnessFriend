@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Ionicons } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-web';
 import NavBar from './NavBar';
+import User from '../database/user';
+import { getAuth, signOut } from "firebase/auth";
 
 
 const screenWidth = Dimensions.get("window").width;
@@ -10,31 +12,38 @@ const screenHeight = Dimensions.get("window").height;
 
 const ProfilePicture = () => {
 
-    
-    useEffect =()=>{ 
+    const [userData, setUserData]= useState(null)
+
+    useEffect(async ()=>{
         const auth = getAuth();
-        const user = new User();
-        const userData = user.getUserinfo(auth.currentUser.uid);
-    }
+        if(userData === null) {
+          const user = new User();
+          console.log("Auth Data: ", auth);
+          const userDataNew = await user.getUserInfo(auth.currentUser.uid);
+          console.log(userDataNew);
+          setUserData(userDataNew);
+      }
+
+    })
 
     return(
             <ScrollView>
-            
+
                 <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
                 <View style= {styles.titleBar}>
-                <Text style ={styles.userName}> {userData.displayName} </Text>
+                <Text style ={styles.userName}> {userData ? userData.displayName : "Hello"} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> {userData.Gender} </Text>
+                    <Text style = {styles.titleBar}> {userData ? userData.age : "Hello"} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> {userData.age} </Text>
+                    <Text style = {styles.titleBar}> {userData ? userData.Gender : "Hello"} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> {userData.height} </Text>
+                    <Text style = {styles.titleBar}> {userData ? userData.Height : "Hello"} </Text>
                 </View>
             </ScrollView>
-       
+
 
     );
 
