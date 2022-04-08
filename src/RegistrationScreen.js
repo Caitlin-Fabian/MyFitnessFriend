@@ -17,7 +17,10 @@ function RegistrationScreen({ navigation }) {
     const register = async () => {
         if (confirmPassword === password) {
             const user = new User(username, email, password);   //Create a new user object w/ the credentials
-            const docID = await user.addUser();     //Asynchronously handles creating a user
+            const userInfo = await user.addUser();     //Asynchronously handles creating a user
+            if(userInfo !== null) {
+              navigation.navigate('HomeScreen');
+            }
         } else {
             alert("Passwords do not match");
         }
@@ -42,7 +45,7 @@ function RegistrationScreen({ navigation }) {
             <Button title="Submit!" onPress={() => register()} />
             <Button
                 title="Have an account?  Login Here."
-                onPress={() => navigation.navigate('Login')}></Button>
+                onPress={() => navigation.navigate('LoginScreen')}></Button>
 
         </View>
     )

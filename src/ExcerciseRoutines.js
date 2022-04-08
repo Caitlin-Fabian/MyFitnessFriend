@@ -5,6 +5,7 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 
+
 function ExerciseRoutines() {
     const workoutPressHandler = (name, routineName) => {
         setRoutines((prevRoutines) => {
@@ -19,7 +20,7 @@ function ExerciseRoutines() {
     const [repText, setRepText] = useState('');
     const [setText, setSetText] = useState('');
     const [routineNameText, setRoutineNameText] = useState('');
-    
+
     const changeNameHandler = (val) => {
         setNameText(val);
     }
@@ -41,9 +42,9 @@ function ExerciseRoutines() {
         setRoutines((prevRoutines) => {
             const tempRoutines = [
                 ...prevRoutines,
-            ]   
+            ]
             tempRoutines.find(routine => routine.name === routineName)?.workouts.push({ name, reps, sets })
-            
+
             return tempRoutines;
         })
     }
@@ -95,7 +96,7 @@ function ExerciseRoutines() {
         deleteRoutineHelper(routineName)
         closeAddWorkoutModal()
     }
-    
+
     const addRoutine = (routineName) => {
         submitAddRoutineHandler(routineName)
         closeAddRoutineModal()
@@ -112,11 +113,11 @@ function ExerciseRoutines() {
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>Routines</Text>
                 </View>
-                
+
                 <Modal visible={addRoutineModal}>
                     <View style={styles.container}>
                         <Text style={{fontSize: 36, padding: 10}}>Add Routine</Text>
-                        <TextInput 
+                        <TextInput
                         style={styles.inputContainer}
                         placeholder='routine name'
                         onChangeText={changeRoutineNameHandler}
@@ -133,18 +134,18 @@ function ExerciseRoutines() {
                         </View>
                         <Text style={{marginTop: 50, fontSize: 28, textAlign: 'center'}}>Add Workout</Text>
                         <View style={{padding: 30, justifyContent: 'center', alignItems: 'center'}}>
-                            <TextInput 
+                            <TextInput
                             style={styles.inputContainer}
                             placeholder='workout name'
                             onChangeText={changeNameHandler}
                             />
-                            <TextInput 
+                            <TextInput
                             style={styles.inputContainer}
                             placeholder='rep number'
                             keyBoardType='numeric'
                             onChangeText={changeRepHandler}
                             />
-                            <TextInput 
+                            <TextInput
                             style={styles.inputContainer}
                             placeholder='set number'
                             keyBoardType='numeric'
@@ -171,9 +172,9 @@ function ExerciseRoutines() {
                 </Modal>
 
 
-                
+
                 <View style={{height: 200}}>
-                    {routines.map(routine => 
+                    {routines.map(routine =>
                     <>
                     <View style={{paddingTop: 10}}>
                     <Text style={styles.routineName}>{routine.name}</Text>

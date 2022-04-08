@@ -23,11 +23,12 @@ export default function App() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user)
+        setUser(user);
+        // console.log("Here is the auth: ", auth);
       }
     })
     //Removed this function
-    console.log("Here is the auth: ", auth);
+
   }, [])
 
   return (
@@ -53,4 +54,3 @@ export default function App() {
 
   );
 }
-
