@@ -48,6 +48,7 @@ export default function App() {
         <Stack.Screen name='NavBar' component={NavBar} />
       </Stack.Navigator>
 
+
       </NavigationContainer>
 
   );
