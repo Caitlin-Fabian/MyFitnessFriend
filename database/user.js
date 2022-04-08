@@ -24,6 +24,9 @@ class User {
                         console.log(user);
                         setDoc(doc(db, 'users', user.uid), {
                             uid: user.uid,
+                            gender: "",
+                            age: 0,
+                            height: 0,
                             weightData: [],
                             workOuts: [],
                             calories: [],
