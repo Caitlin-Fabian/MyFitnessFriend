@@ -19,10 +19,6 @@ export default function App() {
 
   const [user, setUser] = useState(null);
 
-  function getUser() {
-
-  }
-
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -30,7 +26,7 @@ export default function App() {
         setUser(user)
       }
     })
-    setUser(auth)
+    //Removed this function
     console.log("Here is the auth: ", auth);
   }, [])
 
@@ -57,5 +53,3 @@ export default function App() {
 
   );
 }
-
-//component={HomeScreen} 
