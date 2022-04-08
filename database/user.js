@@ -22,6 +22,7 @@ class User {
                         const user = userCredential.user;
                         updateProfile(user, { displayName: this.username })     //Sets the user to have a displayName with the username that was passed in
                         console.log(user);
+                        //Adds a new document to the database that stores all the info that we should(?) need for the user.  The title of the doc is the uid for easy finding
                         setDoc(doc(db, 'users', user.uid), {
                             uid: user.uid,
                             weightData: [],
@@ -46,7 +47,7 @@ class User {
     }
     async getUserInfo(uid) {
       const docRef = doc(db, 'users', uid);
-      const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(docRef);   //Attempts to find the document in the database that has the uid associated with it
       if(docSnap.exists()) {
         console.log("Here is the user data: ", docSnap.data());
         return docSnap.data();

@@ -17,6 +17,7 @@ const screenHeight = Dimensions.get("window").height;
 //Main homepage
 function HomeScreen(props) {
 
+    const [weights, setWeights] = useState([180, 185, 190, 185, 180, 180, 185]);
     const [displayName, setDisplayName] = useState("");
 
     useEffect(async () => {
@@ -41,7 +42,7 @@ function HomeScreen(props) {
             <AppHeader />
             <WelcomeText daily='100' max='2000' displayName={displayName} />
             <CheesyQuote />
-            <Graph />
+            <Graph weights={weights}/>
             <StatusBar style="auto" showHideTransition={'fade'} />
             <NavBar navigation={props.navigation} />
         </View>
@@ -137,7 +138,6 @@ const CheesyQuote = () => {
             justifyContent='center'
             backgroundColor='#E8CCBF'
         >
-
             <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
         </View>
     )
@@ -157,8 +157,8 @@ const chartConfig = {
 }
 
 //Component that holds the graph, rn I just put random numbers in there
-const Graph = () => {
-    const [weights, setWeights] = useState([180, 185, 190, 185, 180, 180, 185]);
+const Graph = (props) => {
+
     return (
         <View
             flex={3}
@@ -175,7 +175,7 @@ const Graph = () => {
                 labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                 datasets: [
                     {
-                        data: weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
+                        data: props.weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
                     }
                 ]
             }}

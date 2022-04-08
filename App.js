@@ -24,11 +24,11 @@ export default function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        console.log("Auth:", auth);
         // console.log("Here is the auth: ", auth);
       }
     })
     //Removed this function
-
   }, [])
 
   return (
