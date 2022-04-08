@@ -1,20 +1,24 @@
-import { StatusBar } from 'expo-status-bar';import React, { useState, useEffect } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Ionicons } from 'react-native';
+import React from 'react';
+import { SafeAreaView } from 'react-native-web';
 import NavBar from './NavBar';
-import auth from '@react-native-firebase/auth';
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const ProfilePicture = (props) => {
+const ProfilePicture = (navigation) => {
+
+    const [userData,setUserData] = userState(null);
 
     return(
+        <SafeAreaView>
             <ScrollView>
             
                 <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
                 <View style= {styles.titleBar}>
-                <Text style ={styles.userName}> {props.user} </Text>
+                <Text style ={styles.userName}> Caitlin Fabian </Text>
                 </View>
                 <View>
                     <Text style = {styles.titleBar}> Gender: </Text>
@@ -25,19 +29,30 @@ const ProfilePicture = (props) => {
                 <View>
                     <Text style = {styles.titleBar}> Height: </Text>
                 </View>
-                <View > 
-                <Button
-                    title="Log Out"
-                    onPress = {() => auth.signOut()}>
-                </Button>
+                <View>
+                    <Button styles={styles.button} title = "Back" onPress ={()=> navigation.navigate('HomeScreen')}></Button>
+
+                    <Button styles={styles.button} title = "Log out" onPress = {()=>signOut()}></Button>
                 </View>
             </ScrollView>
+        </SafeAreaView>
        
 
     );
 
-    }
-  
+}
+const getUser = async() => {
+   await firestore()
+    .collection('users')
+    .doc(user.uid)
+    .get()
+    .then((documentSnapshot) =>{
+        if (documentSnapshot.exists){
+            console.log('User data', documentSnapshot.data());
+            setUserData(documentSnapshot.data());
+        }
+    })
+}
 
 // Main profile function
 function Profile({ navigation }) {
@@ -61,15 +76,13 @@ function Profile({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
-    headerText: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-        fontWeight: 'bold'
+    button: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 24,
+        marginRight: 16,
     },
     userName: {
         fontSize: 18,
@@ -90,7 +103,7 @@ const styles = StyleSheet.create({
         marginTop: 24,
         marginHorizontal: 16
     }
-   
+
 });
 
 export default Profile;
