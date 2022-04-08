@@ -12,13 +12,19 @@ const ProfilePicture = (navigation) => {
 
     const [userData,setUserData] = userState(null);
 
+    useEffect =()=>{ 
+        const auth = getAuth();
+        const user = new User();
+        const userData = user.getUserinfo(auth.currentUser.uid);
+    }
+
     return(
         <SafeAreaView>
             <ScrollView>
             
                 <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
                 <View style= {styles.titleBar}>
-                <Text style ={styles.userName}> Caitlin Fabian </Text>
+                <Text style ={styles.userName}>{userData.displayName} </Text>
                 </View>
                 <View>
                     <Text style = {styles.titleBar}> Gender: </Text>
