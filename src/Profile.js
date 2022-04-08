@@ -10,6 +10,7 @@ const screenHeight = Dimensions.get("window").height;
 
 const ProfilePicture = () => {
 
+    
     useEffect =()=>{ 
         const auth = getAuth();
         const user = new User();
