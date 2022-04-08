@@ -33,7 +33,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           < Stack.Screen name="HomeScreen"  >{props => <HomeScreen {...props} extraData={user} />}</Stack.Screen>
         ) : (
@@ -47,9 +47,8 @@ export default function App() {
         <Stack.Screen name='ExerciseRoutines' component={ExerciseRoutines} />
         <Stack.Screen name='ExerciseIntervals' component={ExerciseIntervals} />
         <Stack.Screen name='NavBar' component={NavBar} />
-      </Stack.Navigator>
-
-
+      </Stack.Navigator> */}
+      <NavBar />
       </NavigationContainer>
 
   );

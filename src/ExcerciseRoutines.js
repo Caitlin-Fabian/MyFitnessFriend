@@ -101,6 +101,7 @@ function ExerciseRoutines() {
         submitAddRoutineHandler(routineName)
         closeAddRoutineModal()
     }
+    
     return (
         <View style={{flex: 1}}>
             <ScrollView style={{backgroundColor: '#96BDC6', flex: 1}}>
