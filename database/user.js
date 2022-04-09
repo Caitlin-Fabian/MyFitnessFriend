@@ -1,5 +1,5 @@
 import { db, app } from './firebaseConfig';
-import { getFirestore, collection, getDocs, addDoc, setDoc, doc, getDoc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, addDoc, setDoc, doc, getDoc, arrayUnion, updateDoc, arrayRemove } from 'firebase/firestore/lite';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 
 
@@ -21,7 +21,6 @@ class User {
                     .then((userCredential) => {
                         const user = userCredential.user;
                         updateProfile(user, { displayName: this.username })     //Sets the user to have a displayName with the username that was passed in
-                        console.log(user);
                         //Adds a new document to the database that stores all the info that we should(?) need for the user.  The title of the doc is the uid for easy finding
                         setDoc(doc(db, 'users', user.uid), {
                             uid: user.uid,
@@ -52,12 +51,30 @@ class User {
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);   //Attempts to find the document in the database that has the uid associated with it
       if(docSnap.exists()) {
-        console.log("Here is the user data: ", docSnap.data());
         return docSnap.data();
       } else {
         console.log("Unable to find doc");
         return null;
       }
+    }
+    //This function takes in WeightData in the form {Weight: xxx, Day: x, Month: x}
+    //If it finds another weight with the same date it will overwrite that weight
+    async addWeightInfo(data, uid) {
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+      if(docSnap.exists()){
+        const userData = docSnap.data();
+        console.log("Here is user data: ", userData);
+        for(let weights of userData.weightData) {
+          if(weights.Day === data.Day) {
+            await updateDoc(docRef, {weightData: arrayRemove(weights)});
+          }
+        }
+        await updateDoc(docRef, {weightData: arrayUnion(data)});
+      } else {
+        console.log("Cannot find doc with that UID: ", uid);
+      }
+
     }
 }
 

@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Dimensions, Button } from 'react-native';
+import { Alert, Modal, StyleSheet, Text, Pressable, View, Dimensions, Button, TextInput } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
-import NavBar from './NavBar';
 import { getAuth, signOut } from "firebase/auth";
 import User from '../database/user';
+import NavBar from './NavBar'
 
 
 
@@ -17,9 +17,10 @@ const screenHeight = Dimensions.get("window").height;
 //Main homepage
 function HomeScreen(props) {
 
-    const [weights, setWeights] = useState([180, 185, 190, 185, 180, 180, 185]);
+    const [weights, setWeights] = useState([0,0,0,0,0,0,0]);
     const [displayName, setDisplayName] = useState("");
     const [userInfo, setUserInfo] = useState(null);
+
 
     useEffect(async () => {
       if(userInfo === null) {
@@ -31,10 +32,17 @@ function HomeScreen(props) {
         } else {
           setDisplayName(userInfo.displayName);
         }
-
       }
-
+      let newWeights = weights;
+      for(let data of userInfo.weightData) {
+        newWeights[data.Day] = data.Weight;
+      }
+      setWeights(newWeights);
     })
+
+
+
+
     return (
         <View
             flex={1}
@@ -49,7 +57,7 @@ function HomeScreen(props) {
             <AppHeader />
             <WelcomeText daily='100' max='2000' displayName={displayName} />
             <CheesyQuote />
-            <Graph weights={weights}/>
+            <Graph weights={weights} userInfoHandle={setUserInfo}/>
             <StatusBar style="auto" showHideTransition={'fade'} />
             <NavBar navigation={props.navigation} />
         </View>
@@ -166,6 +174,8 @@ const chartConfig = {
 //Component that holds the graph, rn I just put random numbers in there
 const Graph = (props) => {
 
+
+
     return (
         <View
             flex={3}
@@ -179,7 +189,7 @@ const Graph = (props) => {
                 Your Weight This Week
             </Text>
             <LineChart data={{
-                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
                 datasets: [
                     {
                         data: props.weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
@@ -200,10 +210,120 @@ const Graph = (props) => {
                     marginTop: 5
                 }}
             />
+            <PopUp infoHandle = {props}/>
         </View>
     );
 }
 
+
+const PopUp = (props) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [weight, setWeight] = useState(null);
+
+  async function addWeightData(weight) {
+    const auth = getAuth();
+    const user = new User();
+    const date = new Date();
+    user.addWeightInfo({Weight: weight, Day: date.getDay(), Month: date.getMonth()}, auth.currentUser.uid);
+  }
+
+  return (
+    <View style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Enter Today's Weight</Text>
+            <TextInput placeholder="Weight" style={styles.inputWeight} onChangeText={text => setWeight(text)} keyboardType='numeric'/>
+            <Pressable
+              style={[styles.buttonClose]}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                addWeightData(weight);
+              }}
+            >
+              <Text style={styles.textStyle}>Add!</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.textStyle}>Add...</Text>
+      </Pressable>
+    </View>
+  );
+};
+
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    position: 'absolute',
+    bottom: 250,
+    left: 90
+  },
+
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  inputWeight: {
+    width: 200,
+    height: 30,
+    padding: 5,
+    margin: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    textAlign: 'center'
+  }
+});
 
 
 
