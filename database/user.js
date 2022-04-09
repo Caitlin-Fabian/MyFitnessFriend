@@ -64,13 +64,14 @@ class User {
       const docSnap = await getDoc(docRef);
       if(docSnap.exists()){
         const userData = docSnap.data();
-        console.log("Here is user data: ", userData);
         for(let weights of userData.weightData) {
           if(weights.Day === data.Day) {
             await updateDoc(docRef, {weightData: arrayRemove(weights)});
           }
         }
         await updateDoc(docRef, {weightData: arrayUnion(data)});
+        const docData = await getDoc(docRef);
+        return docData.data();
       } else {
         console.log("Cannot find doc with that UID: ", uid);
       }
