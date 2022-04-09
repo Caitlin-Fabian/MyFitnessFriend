@@ -39,6 +39,7 @@ const ProfilePicture = () => {
                 <View>
                     <Text style = {styles.titleBar}> {userData ? userData.Gender : "Hello"} </Text>
                 </View>
+
                 <View>
                     <Text style = {styles.titleBar}> {userData ? userData.Height : "Hello"} </Text>
                 </View>

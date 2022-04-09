@@ -19,12 +19,19 @@ function HomeScreen(props) {
 
     const [weights, setWeights] = useState([180, 185, 190, 185, 180, 180, 185]);
     const [displayName, setDisplayName] = useState("");
+    const [userInfo, setUserInfo] = useState(null);
 
     useEffect(async () => {
-      const user = new User();
-      const userData = await user.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
-      if(userData != null) {
-        setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
+      if(userInfo === null) {
+        const user = new User();
+        const userData = await user.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
+        setUserInfo(userData);
+        if(userData != null) {
+          setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
+        } else {
+          setDisplayName(userInfo.displayName);
+        }
+
       }
 
     })
@@ -198,13 +205,7 @@ const Graph = (props) => {
 }
 
 
-const ButtonToGoToProfile = ({ navigation }) => {
-    return (
-        <View>
-            <Button title="Go to Profile" onPress={() => navigation.navigate('Profile')}>Hello</Button>
-        </View>
-    );
-}
+
 
 
 export default HomeScreen;
