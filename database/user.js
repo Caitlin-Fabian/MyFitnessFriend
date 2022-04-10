@@ -9,9 +9,11 @@ class User {
         this.email = email;
         this.password = password;
     }
+
     validateParams() {
         return this.username && this.password && this.email;
     }
+
     async addUser() {
         //Ensures that a username, password, and email were filled in
         if (this.validateParams()) {
@@ -47,7 +49,8 @@ class User {
             }
         }
     }
-    async getUserInfo(uid) {
+
+    static async getUserInfo(uid) {
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);   //Attempts to find the document in the database that has the uid associated with it
       if(docSnap.exists()) {
@@ -57,9 +60,10 @@ class User {
         return null;
       }
     }
+
     //This function takes in WeightData in the form {Weight: xxx, Day: x, Month: x}
     //If it finds another weight with the same date it will overwrite that weight
-    async addWeightInfo(data, uid) {
+    static async addWeightInfo(data, uid) {
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
       if(docSnap.exists()){
