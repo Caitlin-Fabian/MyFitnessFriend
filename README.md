@@ -1,11 +1,9 @@
 # MyFitnessFriend
 
 ## Instructions
-When you clone the repo run:
-``` npm install ```  
-To get all the updated packages  
+Clone the repo and run ```npm install``` to get all of the necessary node modules  
+Navigate to the directory in your terminal and ```npm start```  
+Download the Expo Go app on your phone  
+Scan the QR code in your terminal  
+The app will run on your phone now  
   
-  
-After cloning and installing navigate to the directory and run:
-``` npm start ```  
-A barcode will appear in the terminal that you can scan
