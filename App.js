@@ -17,28 +17,15 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        console.log("Auth:", auth);
-        // console.log("Here is the auth: ", auth);
-      }
-    })
-    //Removed this function
-  }, [])
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        
-        <Stack.Screen name="HomeScreen"  >{props => <HomeScreen {...props} extraData={user} />}</Stack.Screen>
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="LoginScreen">
+        <Stack.Screen name="LoginScreen" ></Stack.Screen>
+        <Stack.Screen name="HomeScreen"  ></Stack.Screen>
         <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
-        <Stack.Screen name="LoginScreen" >{props => <LoginScreen {...props} extraData={user} />}</Stack.Screen>
-        <Stack.Screen name="Profile" >{props => <Profile {...props} extraData={user} />}</Stack.Screen>
+        <Stack.Screen name="Profile" />
         <Stack.Screen name="CalorieTracker" component={CalorieTracker} />
         <Stack.Screen name='ExerciseRoutines' component={ExerciseRoutines} />
         <Stack.Screen name='ExerciseIntervals' component={ExerciseIntervals} />
@@ -46,7 +33,7 @@ export default function App() {
       </Stack.Navigator>
 
 
-      </NavigationContainer>
+    </NavigationContainer>
 
   );
 }
