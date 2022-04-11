@@ -34,15 +34,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
-          < Stack.Screen name="HomeScreen"  >{props => <HomeScreen {...props} extraData={user} />}</Stack.Screen>
-        ) : (
-          <>
-            <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          </>
-        )}
-        <Stack.Screen name="Profile" component={Profile} />
+        
+        <Stack.Screen name="HomeScreen"  >{props => <HomeScreen {...props} extraData={user} />}</Stack.Screen>
+        <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
+        <Stack.Screen name="LoginScreen" >{props => <LoginScreen {...props} extraData={user} />}</Stack.Screen>
+        <Stack.Screen name="Profile" >{props => <Profile {...props} extraData={user} />}</Stack.Screen>
         <Stack.Screen name="CalorieTracker" component={CalorieTracker} />
         <Stack.Screen name='ExerciseRoutines' component={ExerciseRoutines} />
         <Stack.Screen name='ExerciseIntervals' component={ExerciseIntervals} />
