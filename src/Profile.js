@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Ionicons } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Ionicons, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-web';
 import NavBar from './NavBar';
@@ -29,19 +29,24 @@ const ProfilePicture = () => {
     return(
             <ScrollView>
 
-                <Image source={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
+                <Image source={userData ? userData.userImg : {uri:"https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}} style= {styles.userImg}></Image>
                 <View style= {styles.titleBar}>
                 <Text style ={styles.userName}> {userData ? userData.displayName : "Hello"} </Text>
                 </View>
                 <View>
-                    <Text style = {styles.titleBar}> {userData ? userData.age : "Hello"} </Text>
+                    <Text style = {styles.titleBar}> {userData ? userData.age : "0"} </Text>
                 </View>
                 <View>
                     <Text style = {styles.titleBar}> {userData ? userData.Gender : "Hello"} </Text>
                 </View>
 
                 <View>
-                    <Text style = {styles.titleBar}> {userData ? userData.Height : "Hello"} </Text>
+                    <Text style = {styles.titleBar}> {userData ? userData.Height : "0"} </Text>
+                </View>
+                <View>
+                    <TouchableOpacity style={styles.button} onPress={() => signOut()}> 
+                    <Text style = {styles.buttonText}> Log Out</Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
 
@@ -82,11 +87,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
-    headerText: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-        fontWeight: 'bold'
+    button: {
+        marginRight: 15,
+        marginTop: 10,
+    },
+    buttonText:{
+        marginRight: 15, 
+        marginTop: 10,
     },
     userName: {
         fontSize: 18,
