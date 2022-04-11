@@ -21,11 +21,18 @@ function HomeScreen(props) {
     const [displayName, setDisplayName] = useState("");
     const [userInfo, setUserInfo] = useState(null);
 
+    //Resets the weight state to the new array of weights
+    function weightDataHandler() {
+      let newWeights = weights;
+      for(let data of userInfo.weightData) {
+        newWeights[data.Day] = data.Weight;
+      }
+      setWeights(newWeights);
+    }
 
     useEffect(async () => {
       if(userInfo === null) {
-        const user = new User();
-        const userData = await user.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
+        const userData = await User.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
         setUserInfo(userData);
         if(userData != null) {
           setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
@@ -33,31 +40,15 @@ function HomeScreen(props) {
           setDisplayName(userInfo.displayName);
         }
       }
-      let newWeights = weights;
-      for(let data of userInfo.weightData) {
-        newWeights[data.Day] = data.Weight;
-      }
-      setWeights(newWeights);
+      weightDataHandler();
     })
 
-
-
-
     return (
-        <View
-            flex={1}
-            backgroundColor='#96BDC6'
-            alignItems='center'
-            justifyContent='center'
-            paddingTop={screenHeight * 0.1}
-            paddingBottom={screenHeight * 0.15}
-            width={screenWidth}
-            height={screenHeight}
-        >
+        <View style={styles.container}  >
             <AppHeader />
             <WelcomeText daily='100' max='2000' displayName={displayName} />
             <CheesyQuote />
-            <Graph weights={weights} userInfoHandle={setUserInfo}/>
+            <Graph weights={weights} infoHandle={setUserInfo} weightRefresh={weightDataHandler}/>
             <StatusBar style="auto" showHideTransition={'fade'} />
             <NavBar navigation={props.navigation} />
         </View>
@@ -82,19 +73,7 @@ function AppHeader() {
 //Component that holds the daily calorie intake for the user
 const WelcomeText = (props) => {
     return (
-        <View
-            flex={1}
-            flexDirection='column'
-            margin={5}
-            padding={20}
-            alignItems='center'
-            borderColor='black'
-            borderWidth={1.5}
-            width={screenWidth * 0.8}
-            justifyContent='center'
-            height={screenHeight * 0.25}
-            backgroundColor='#E8CCBF'
-        >
+        <View style={styles.componentHolder} >
             <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName}</Text>
             <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
             <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
@@ -103,56 +82,45 @@ const WelcomeText = (props) => {
 }
 
 
-//Queries an API to get a daily inspirational quote and returns the quote string
-function getQuote() {
-    console.log("Querying data");
-    return new Promise((res, rej) => {
-        fetch('https://quotes.rest/qod.json')
-            .then(result => {
-                return result.json();
-            })
-            .then(data => {
-                res(data.contents.quotes[0]);
-            })
-            .catch(err => {
-                rej(err);
-            })
-    })
-}
-
-
 //Component that holds the inspirational quote
 const CheesyQuote = () => {
     const [quote, setQuote] = useState(false);
     const [inspo, setInspo] = useState("");
     const [author, setAuthor] = useState("");
-    //If the quote has already been retrieved from API don't query for another
-    if (!quote) {
-        getQuote()
-            .then(result => {
-                setQuote(true);
-                setInspo(result.quote);
-                setAuthor(result.author);
-            })
-            .catch(err => {
-                setQuote(false);
-                console.log(`Error querying API: ${err}`);
-            })
+
+
+    useEffect(() => {
+      if(!quote) {
+      getQuote()
+        .then(res => {
+          setQuote(true);
+          setInspo(res[0].q);
+          setAuthor(res[0].a);
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    })
+
+    function getQuote() {
+      return new Promise((res, rej) => {
+        fetch('https://zenquotes.io/api/today')
+        .then(result => {
+            return result.json();
+        })
+        .then(data => {
+          res(data);
+        })
+        .catch(err => {
+          console.log("Couldn't query API: ", err);
+          rej(err);
+        })
+      })
     }
+
     return (
-        <View
-            flex={1}
-            flexDirection='column'
-            margin={5}
-            padding={20}
-            alignItems='center'
-            borderColor='black'
-            borderWidth={1.5}
-            width={screenWidth * 0.8}
-            height={screenHeight * 0.25}
-            justifyContent='center'
-            backgroundColor='#E8CCBF'
-        >
+        <View style={styles.componentHolder} >
             <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
         </View>
     )
@@ -169,22 +137,18 @@ const chartConfig = {
     labelColor: (opacity = 1) => 'rgba(0,0,0, 1)',
     strokeWidth: 3, // optional, default 3
     barPercentage: 0.5,
+    decimalPlaces: 0,
 }
 
 //Component that holds the graph, rn I just put random numbers in there
 const Graph = (props) => {
 
+  //TBH there's definitely a better way to do this, but my head hurts so I'm leaving it like this for now
+  const [refresh, setRefresh] = useState(0);
 
 
     return (
-        <View
-            flex={3}
-            flexDirection='column'
-            marginTop={50}
-            padding={0}
-            alignItems='center'
-            justifyContent='center'
-        >
+        <View style={styles.graphHolder}>
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                 Your Weight This Week
             </Text>
@@ -196,12 +160,15 @@ const Graph = (props) => {
                     }
                 ]
             }}
-
                 height={screenHeight * 0.3}
                 width={screenWidth * 0.8}
                 chartConfig={chartConfig}
-                withInnerLines={false}
-                withOuterLines={false}
+                withInnerLines={true}
+                withVerticalLines={false}
+                withHorizontalLines={true}
+                withOuterLines={true}
+                yAxisSuffix=" lbs"
+
                 bezier
                 style={{
                     borderColor: 'black',
@@ -210,7 +177,7 @@ const Graph = (props) => {
                     marginTop: 5
                 }}
             />
-            <PopUp infoHandle = {props}/>
+            <PopUp infoHandle = {props} refresh={setRefresh} data={refresh}/>
         </View>
     );
 }
@@ -222,9 +189,16 @@ const PopUp = (props) => {
 
   async function addWeightData(weight) {
     const auth = getAuth();
-    const user = new User();
     const date = new Date();
-    user.addWeightInfo({Weight: weight, Day: date.getDay(), Month: date.getMonth()}, auth.currentUser.uid);
+    const newInfo = await User.addWeightInfo({Weight: weight, Day: date.getDay(), Month: date.getMonth()}, auth.currentUser.uid); //Add the weight data to the graph
+    props.infoHandle.infoHandle(newInfo);   //Sets the new userInfo in the parent component
+    props.infoHandle.weightRefresh()  //Reloads the weight data in the parent component
+    props.refresh(props.data+ 1); //Increments the state on the graph component so it will reload when weight data is updated
+  }
+
+  //Makes sure the user entered a weight > 0
+  function verifyData() {
+    return parseInt(weight) > 0;
   }
 
   return (
@@ -245,8 +219,12 @@ const PopUp = (props) => {
             <Pressable
               style={[styles.buttonClose]}
               onPress={() => {
-                setModalVisible(!modalVisible);
-                addWeightData(weight);
+                if(verifyData()){
+                  setModalVisible(!modalVisible);
+                  addWeightData(weight);
+                } else {
+                  alert("Weight must be greater than 0!");
+                }
               }}
             >
               <Text style={styles.textStyle}>Add!</Text>
@@ -322,7 +300,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     textAlign: 'center'
-  }
+  },
+  graphHolder: {
+    flex: 3,
+    flexDirection: 'column',
+    marginTop: 50,
+    padding: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  componentHolder: {
+    flex: 1,
+    flexDirection: 'column',
+    margin: 5,
+    padding: 20,
+    alignItems: 'center',
+    borderColor: 'black',
+    borderWidth: 1.5,
+    width: (screenWidth * 0.8),
+    height: (screenHeight * 0.25),
+    justifyContent: 'center',
+    backgroundColor: '#E8CCBF',
+  },
+   container: {
+     flex: 1,
+     backgroundColor:'#96BDC6',
+     alignItems:'center',
+     justifyContent:'center',
+     paddingTop:(screenHeight * 0.1),
+     paddingBottom:(screenHeight * 0.15),
+     width:(screenWidth),
+     height:(screenHeight),
+   }
 });
 
 
