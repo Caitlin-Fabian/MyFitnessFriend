@@ -19,10 +19,12 @@ function Profile({ navigation }) {
     const [email, setEmail] = useState('');
 
     useEffect(async () => {
-        const auth = getAuth();
-        const { uid } = auth.currentUser;
-        const userData = await User.getUserInfo(uid);
-        setUserData(userData);
+        if (userData === null) {
+            const auth = getAuth();
+            const { uid } = auth.currentUser;
+            const userData = await User.getUserInfo(uid);
+            setUserData(userData);
+        }
     })
     const LogOut = () => {
         const auth = getAuth();
