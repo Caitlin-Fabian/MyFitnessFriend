@@ -12,21 +12,24 @@ const screenHeight = Dimensions.get("window").height;
 
 function Profile({ navigation }) {
 
-    const [userData, setUserData]= useState(null);
+    const [userData, setUserData] = useState(null);
     const [display, setUsername] = useState('');
     const [gender, setGender] = useState('');
     const [age, setAge] = useState('');
     const [email, setEmail] = useState('');
 
-    useEffect(async ()=>{
+    useEffect(async () => {
         const auth = getAuth();
-        const {uid} = auth.currentUser;
+        const { uid } = auth.currentUser;
         const userData = await User.getUserInfo(uid);
         setUserData(userData);
     })
-    const LogOut = ()=>{
-        signOut(getAuth());
-        navigation.navigate('RegistrationScreen');
+    const LogOut = () => {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            navigation.navigate('RegistrationScreen', { extraData: {} });
+        })
+
     }
 
     const [edit, setEdit] = useState(false);
@@ -43,60 +46,60 @@ function Profile({ navigation }) {
         setGender(val);
     };
 
-    const handleUpdate = async()=> {
+    const handleUpdate = async () => {
 
         fireStore()
-        .collection('users')
-        .doc(user.uid)
-        .update({
-            displayName: userData.displayName,
-            age: userData.age,
-            gender: userData.gender,
-        })
-        .then(()=>{
-            console.log('User Updated');
-            Alert.alert('Profile Updated!');
-        })
+            .collection('users')
+            .doc(user.uid)
+            .update({
+                displayName: userData.displayName,
+                age: userData.age,
+                gender: userData.gender,
+            })
+            .then(() => {
+                console.log('User Updated');
+                Alert.alert('Profile Updated!');
+            })
     }
 
 
-    return(
+    return (
         <SafeAreaView style={styles.container}>
-                <ScrollView style={{backgroundColor: '#96BDC6', flex: 1}}>
-                    <View style={styles.container}>
-                        <View >
-                            <TouchableOpacity 
-                            onPress={() => LogOut()} 
-                            style={{position: 'absolute', backgroundColor: '#dcdcdc', borderWidth: 1, padding: 10, borderRadius: 10, left: 80, bottom: 10}}>
-                            <Text style= {styles.buttonText}> Log Out</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View>
-                            <TouchableOpacity 
-                            onPress={() => setEdit(true)} 
-                            style={{position: 'absolute', backgroundColor: '#dcdcdc',  borderWidth: 1,padding: 10, borderRadius: 10, right: 100, bottom: 10}}>
-                            <Text style= {styles.buttonText}> Edit</Text>
-                            </TouchableOpacity>
-                        </View>
-               
+            <ScrollView style={{ backgroundColor: '#96BDC6', flex: 1 }}>
+                <View style={styles.container}>
+                    <View >
+                        <TouchableOpacity
+                            onPress={() => LogOut()}
+                            style={{ position: 'absolute', backgroundColor: '#dcdcdc', borderWidth: 1, padding: 10, borderRadius: 10, left: 80, bottom: 10 }}>
+                            <Text style={styles.buttonText}> Log Out</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => setEdit(true)}
+                            style={{ position: 'absolute', backgroundColor: '#dcdcdc', borderWidth: 1, padding: 10, borderRadius: 10, right: 100, bottom: 10 }}>
+                            <Text style={styles.buttonText}> Edit</Text>
+                        </TouchableOpacity>
+                    </View>
+
                     <Image
-                        style={styles.userImg} 
+                        style={styles.userImg}
                         source={userData ? userData.userImg : { uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg" }}
                     />
-                    <Text style={styles.userName}> {userData? userData.displayName: "User Name"} </Text>
+                    <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
                     <Text style={styles.titleBar}> Age {userData ? userData.age : "0"} </Text>
                     <Text style={styles.titleBar}> Gender {userData ? userData.Gender : "Female"} </Text>
                     <Text style={styles.titleBar}> Height {userData ? userData.Height : "0"} </Text>
-                    
-                    </View>
 
-                    <Modal visible={edit}>
+                </View>
+
+                <Modal visible={edit}>
                     <View style={styles.container}>
                         <Image
-                        style ={styles.userImg}
-                        source ={{uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg"}}
+                            style={styles.userImg}
+                            source={{ uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg" }}
                         />
-                        <Text style={{fontSize: 36, padding: 10}}>Profile Edit</Text>
+                        <Text style={{ fontSize: 36, padding: 10 }}>Profile Edit</Text>
                         <TextInput
                             style={styles.inputContainer}
                             placeholder='UserName'
@@ -112,13 +115,13 @@ function Profile({ navigation }) {
                             placeholder='Gender'
                             onChangeText={changeGender}
                         />
-                        <Button title='exit' onPress={() => setEdit(false)}/>
-                        <Button title='Save' onPress={() => handleUpdate()}/>
+                        <Button title='exit' onPress={() => setEdit(false)} />
+                        <Button title='Save' onPress={() => handleUpdate()} />
                     </View>
-                    </Modal>
-                    
-                     
-                </ScrollView>
+                </Modal>
+
+
+            </ScrollView>
         </SafeAreaView>
 
 
@@ -128,12 +131,12 @@ function Profile({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:'#96BDC6',
-        alignItems:'center',
-        justifyContent:'center',
-        paddingTop:(screenHeight * 0.1),
-        paddingBottom:(screenHeight * 0.15),
-        width:(screenWidth),
+        backgroundColor: '#96BDC6',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: (screenHeight * 0.1),
+        paddingBottom: (screenHeight * 0.15),
+        width: (screenWidth),
         //height:(screenHeight),
     },
     userImg: {
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         fontSize: 15,
-        
+
     },
     userName: {
         fontSize: 18,

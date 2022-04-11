@@ -17,80 +17,80 @@ const screenHeight = Dimensions.get("window").height;
 //Main homepage
 function HomeScreen(props) {
 
-    const [weights, setWeights] = useState([0,0,0,0,0,0,0]);
-    const [displayName, setDisplayName] = useState("");
-    const [userInfo, setUserInfo] = useState(null);
+  const [weights, setWeights] = useState([0, 0, 0, 0, 0, 0, 0]);
+  const [displayName, setDisplayName] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
 
-    //Resets the weight state to the new array of weights
-    function weightDataHandler() {
-      let newWeights = weights;
-      for(let data of userInfo.weightData) {
-        newWeights[data.Day] = data.Weight;
-      }
-      setWeights(newWeights);
+  //Resets the weight state to the new array of weights
+  function weightDataHandler() {
+    let newWeights = weights;
+    for (let data of userInfo.weightData) {
+      newWeights[data.Day] = data.Weight;
     }
+    setWeights(newWeights);
+  }
 
-    useEffect(async () => {
-      if(userInfo === null) {
-        const userData = await User.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
-        setUserInfo(userData);
-        if(userData != null) {
-          setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
-        } else {
-          setDisplayName(userInfo.displayName);
-        }
+  useEffect(async () => {
+    if (userInfo === null) {
+      const userData = await User.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
+      setUserInfo(userData);
+      if (userData != null) {
+        setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
+      } else {
+        setDisplayName(userInfo.displayName);
       }
-      weightDataHandler();
-    })
+    }
+    weightDataHandler();
+  })
 
-    return (
-        <View style={styles.container}  >
-            <AppHeader />
-            <WelcomeText daily='100' max='2000' displayName={displayName} />
-            <CheesyQuote />
-            <Graph weights={weights} infoHandle={setUserInfo} weightRefresh={weightDataHandler}/>
-            <StatusBar style="auto" showHideTransition={'fade'} />
-            <NavBar navigation={props.navigation} />
-        </View>
-    );
+  return (
+    <View style={styles.container}  >
+      <AppHeader />
+      <WelcomeText daily='100' max='2000' displayName={displayName} />
+      <CheesyQuote />
+      <Graph weights={weights} infoHandle={setUserInfo} weightRefresh={weightDataHandler} />
+      <StatusBar style="auto" showHideTransition={'fade'} />
+      <NavBar navigation={props.navigation} />
+    </View>
+  );
 }
 
 function AppHeader() {
-    return (
-        <View
-            flex={1}
-            backgroundColor='#96BDC6'
-            alignItems='center'
-            justifyContent='center'
-            marginBottom={25}
-            marginTop={0}
-        >
-            <Text style={{ fontSize: 40, fontWeight: 'bold' }}>MyFitnessFriend</Text>
-        </View>
-    )
+  return (
+    <View
+      flex={1}
+      backgroundColor='#96BDC6'
+      alignItems='center'
+      justifyContent='center'
+      marginBottom={25}
+      marginTop={0}
+    >
+      <Text style={{ fontSize: 40, fontWeight: 'bold' }}>MyFitnessFriend</Text>
+    </View>
+  )
 }
 
 //Component that holds the daily calorie intake for the user
 const WelcomeText = (props) => {
-    return (
-        <View style={styles.componentHolder} >
-            <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName}</Text>
-            <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
-            <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
-        </View>
-    );
+  return (
+    <View style={styles.componentHolder} >
+      <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName}</Text>
+      <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
+      <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
+    </View>
+  );
 }
 
 
 //Component that holds the inspirational quote
 const CheesyQuote = () => {
-    const [quote, setQuote] = useState(false);
-    const [inspo, setInspo] = useState("");
-    const [author, setAuthor] = useState("");
+  const [quote, setQuote] = useState(false);
+  const [inspo, setInspo] = useState("");
+  const [author, setAuthor] = useState("");
 
 
-    useEffect(() => {
-      if(!quote) {
+  useEffect(() => {
+    if (!quote) {
       getQuote()
         .then(res => {
           setQuote(true);
@@ -100,14 +100,14 @@ const CheesyQuote = () => {
         .catch(err => {
           console.log(err)
         })
-      }
-    })
+    }
+  })
 
-    function getQuote() {
-      return new Promise((res, rej) => {
-        fetch('https://zenquotes.io/api/today')
+  function getQuote() {
+    return new Promise((res, rej) => {
+      fetch('https://zenquotes.io/api/today')
         .then(result => {
-            return result.json();
+          return result.json();
         })
         .then(data => {
           res(data);
@@ -116,28 +116,28 @@ const CheesyQuote = () => {
           console.log("Couldn't query API: ", err);
           rej(err);
         })
-      })
-    }
+    })
+  }
 
-    return (
-        <View style={styles.componentHolder} >
-            <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
-        </View>
-    )
+  return (
+    <View style={styles.componentHolder} >
+      <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
+    </View>
+  )
 }
 
 
 //Styling for the graphs
 const chartConfig = {
-    backgroundGradientFrom: "#E8CCBF",
-    backgroundGradientFromOpacity: 1,
-    backgroundGradientTo: "#E8CCBF",
-    backgroundGradientToOpacity: 1,
-    color: (opacity = 1) => `rgba(0, 0, 0, 0.8)`,
-    labelColor: (opacity = 1) => 'rgba(0,0,0, 1)',
-    strokeWidth: 3, // optional, default 3
-    barPercentage: 0.5,
-    decimalPlaces: 0,
+  backgroundGradientFrom: "#E8CCBF",
+  backgroundGradientFromOpacity: 1,
+  backgroundGradientTo: "#E8CCBF",
+  backgroundGradientToOpacity: 1,
+  color: (opacity = 1) => `rgba(0, 0, 0, 0.8)`,
+  labelColor: (opacity = 1) => 'rgba(0,0,0, 1)',
+  strokeWidth: 3, // optional, default 3
+  barPercentage: 0.5,
+  decimalPlaces: 0,
 }
 
 //Component that holds the graph, rn I just put random numbers in there
@@ -147,39 +147,39 @@ const Graph = (props) => {
   const [refresh, setRefresh] = useState(0);
 
 
-    return (
-        <View style={styles.graphHolder}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                Your Weight This Week
-            </Text>
-            <LineChart data={{
-                labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
-                datasets: [
-                    {
-                        data: props.weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
-                    }
-                ]
-            }}
-                height={screenHeight * 0.3}
-                width={screenWidth * 0.8}
-                chartConfig={chartConfig}
-                withInnerLines={true}
-                withVerticalLines={false}
-                withHorizontalLines={true}
-                withOuterLines={true}
-                yAxisSuffix=" lbs"
+  return (
+    <View style={styles.graphHolder}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+        Your Weight This Week
+      </Text>
+      <LineChart data={{
+        labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+        datasets: [
+          {
+            data: props.weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
+          }
+        ]
+      }}
+        height={screenHeight * 0.3}
+        width={screenWidth * 0.8}
+        chartConfig={chartConfig}
+        withInnerLines={true}
+        withVerticalLines={false}
+        withHorizontalLines={true}
+        withOuterLines={true}
+        yAxisSuffix=" lbs"
 
-                bezier
-                style={{
-                    borderColor: 'black',
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    marginTop: 5
-                }}
-            />
-            <PopUp infoHandle = {props} refresh={setRefresh} data={refresh}/>
-        </View>
-    );
+        bezier
+        style={{
+          borderColor: 'black',
+          borderWidth: 1,
+          borderRadius: 15,
+          marginTop: 5
+        }}
+      />
+      <PopUp infoHandle={props} refresh={setRefresh} data={refresh} />
+    </View>
+  );
 }
 
 
@@ -190,10 +190,10 @@ const PopUp = (props) => {
   async function addWeightData(weight) {
     const auth = getAuth();
     const date = new Date();
-    const newInfo = await User.addWeightInfo({Weight: weight, Day: date.getDay(), Month: date.getMonth()}, auth.currentUser.uid); //Add the weight data to the graph
+    const newInfo = await User.addWeightInfo({ Weight: weight, Day: date.getDay(), Month: date.getMonth() }, auth.currentUser.uid); //Add the weight data to the graph
     props.infoHandle.infoHandle(newInfo);   //Sets the new userInfo in the parent component
     props.infoHandle.weightRefresh()  //Reloads the weight data in the parent component
-    props.refresh(props.data+ 1); //Increments the state on the graph component so it will reload when weight data is updated
+    props.refresh(props.data + 1); //Increments the state on the graph component so it will reload when weight data is updated
   }
 
   //Makes sure the user entered a weight > 0
@@ -215,11 +215,11 @@ const PopUp = (props) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Enter Today's Weight</Text>
-            <TextInput placeholder="Weight" style={styles.inputWeight} onChangeText={text => setWeight(text)} keyboardType='numeric'/>
+            <TextInput placeholder="Weight" style={styles.inputWeight} onChangeText={text => setWeight(text)} keyboardType='numeric' />
             <Pressable
               style={[styles.buttonClose]}
               onPress={() => {
-                if(verifyData()){
+                if (verifyData()) {
                   setModalVisible(!modalVisible);
                   addWeightData(weight);
                 } else {
@@ -322,16 +322,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#E8CCBF',
   },
-   container: {
-     flex: 1,
-     backgroundColor:'#96BDC6',
-     alignItems:'center',
-     justifyContent:'center',
-     paddingTop:(screenHeight * 0.1),
-     paddingBottom:(screenHeight * 0.15),
-     width:(screenWidth),
-     height:(screenHeight),
-   }
+  container: {
+    flex: 1,
+    backgroundColor: '#96BDC6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: (screenHeight * 0.1),
+    paddingBottom: (screenHeight * 0.15),
+    width: (screenWidth),
+    height: (screenHeight),
+  }
 });
 
 
