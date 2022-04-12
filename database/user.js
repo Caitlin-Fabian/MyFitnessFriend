@@ -1,7 +1,7 @@
 import { db, app } from './firebaseConfig';
 import { getFirestore, collection, getDocs, addDoc, setDoc, doc, getDoc, arrayUnion, updateDoc, arrayRemove } from 'firebase/firestore/lite';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
-
+import ErrorHandle from './errorHandle'
 
 class User {
     constructor(username = null, email = null, password = null) {
@@ -40,7 +40,7 @@ class User {
                     })
                     .catch((e) => {
                         console.log(e);
-                        alert(e);   //Will alert is email is already in use or w/ever else happens
+                        alert(ErrorHandle.parseError(e.code));   //Will alert is email is already in use or w/ever else happens
                         return null;
                     })
             } catch (e) {

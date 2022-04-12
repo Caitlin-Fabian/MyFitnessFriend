@@ -30,9 +30,19 @@ function HomeScreen(props) {
     setWeights(newWeights);
   }
 
+  function setUserData(data) {
+    if(data !== null) {
+      setUserInfo(data);
+      setDisplayName(data.displayName);
+    }
+  }
+
+
+
   useEffect(async () => {
+    setUserData(props.route.params.extraData);
     if (userInfo === null) {
-      const userData = await User.getUserInfo(props.extraData.uid); //Pulls user info from the firebase
+      const userData = await User.getUserInfo(props.route.params.extraData.uid); //Pulls user info from the firebase
       setUserInfo(userData);
       if (userData != null) {
         setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
@@ -74,7 +84,7 @@ function AppHeader() {
 const WelcomeText = (props) => {
   return (
     <View style={styles.componentHolder} >
-      <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName}</Text>
+      <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName ? props.displayName : "Unknown"}</Text>
       <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
       <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
     </View>

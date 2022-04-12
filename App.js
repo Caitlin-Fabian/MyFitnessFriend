@@ -17,15 +17,13 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="LoginScreen">
-        <Stack.Screen name="LoginScreen" ></Stack.Screen>
-        <Stack.Screen name="HomeScreen"  ></Stack.Screen>
+        <Stack.Screen name="LoginScreen" component={LoginScreen}></Stack.Screen>
+        <Stack.Screen name="HomeScreen"  component={HomeScreen}></Stack.Screen>
         <Stack.Screen name="RegistrationScreen" component={RegistrationScreen} />
-        <Stack.Screen name="Profile" />
+        <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="CalorieTracker" component={CalorieTracker} />
         <Stack.Screen name='ExerciseRoutines' component={ExerciseRoutines} />
         <Stack.Screen name='ExerciseIntervals' component={ExerciseIntervals} />
