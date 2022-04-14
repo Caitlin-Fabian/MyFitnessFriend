@@ -16,7 +16,6 @@ function LoginScreen({ navigation }) {
 
     async function signIn() {
         const auth = getAuth();
-
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
