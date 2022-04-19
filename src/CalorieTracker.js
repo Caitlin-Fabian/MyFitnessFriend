@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-
+//Decided that everything is bad making dynamic table with searh feature separate
 
 const tableConfig = {
 
