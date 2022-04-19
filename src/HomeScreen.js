@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { Alert, Modal, StyleSheet, Text, Pressable, View, Dimensions, Button, TextInput } from "react-native";
+import { Alert, Modal, StyleSheet, Text, Pressable, View, Dimensions, TextInput, ScrollView, SafeAreaView } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { LineChart } from 'react-native-chart-kit';
 import { getAuth, signOut } from "firebase/auth";
 import User from '../database/user';
-import NavBar from './NavBar'
 
 
 
@@ -30,19 +29,10 @@ function HomeScreen(props) {
     setWeights(newWeights);
   }
 
-  function setUserData(data) {
-    if(data !== null) {
-      setUserInfo(data);
-      setDisplayName(data.displayName);
-    }
-  }
-
-
-
   useEffect(async () => {
-    setUserData(props.route.params.extraData);
+    const auth = getAuth();
     if (userInfo === null) {
-      const userData = await User.getUserInfo(props.route.params.extraData.uid); //Pulls user info from the firebase
+      const userData = await User.getUserInfo(auth.currentUser.uid); //Pulls user info from the firebase
       setUserInfo(userData);
       if (userData != null) {
         setDisplayName(userData.displayName); //Updates displayname to be the name stored in database
@@ -54,14 +44,16 @@ function HomeScreen(props) {
   })
 
   return (
-    <View style={styles.container}  >
-      <AppHeader />
-      <WelcomeText daily='100' max='2000' displayName={displayName} />
-      <CheesyQuote />
-      <Graph weights={weights} infoHandle={setUserInfo} weightRefresh={weightDataHandler} />
-      <StatusBar style="auto" showHideTransition={'fade'} />
-      <NavBar navigation={props.navigation} />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
+        <AppHeader />
+        <WelcomeText daily='100' max='2000' displayName={displayName} />
+        <CheesyQuote />
+        <Graph weights={weights} infoHandle={setUserInfo} weightRefresh={weightDataHandler} />
+        <StatusBar style="auto" showHideTransition={'fade'} translucent={true} backgroundColor='transparent'/>
+      </ScrollView>
+    </SafeAreaView>
+
   );
 }
 
@@ -84,7 +76,7 @@ function AppHeader() {
 const WelcomeText = (props) => {
   return (
     <View style={styles.componentHolder} >
-      <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome: {props.displayName ? props.displayName : "Unknown"}</Text>
+      <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome Back, {props.displayName ? props.displayName : "Unknown"}!</Text>
       <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
       <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
     </View>
@@ -328,7 +320,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1.5,
     width: (screenWidth * 0.8),
-    height: (screenHeight * 0.25),
+    height: (screenHeight * 0.2),
     justifyContent: 'center',
     backgroundColor: '#E8CCBF',
   },
@@ -337,10 +329,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#96BDC6',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: (screenHeight * 0.1),
-    paddingBottom: (screenHeight * 0.15),
-    width: (screenWidth),
-    height: (screenHeight),
+    width: (screenWidth)
+  },
+  scrollview: {
+    marginBottom: 60,
+    marginTop: 10,
   }
 });
 

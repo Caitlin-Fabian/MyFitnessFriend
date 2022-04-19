@@ -5,6 +5,8 @@ import Profile from './Profile';
 import CalorieTrackerScreen from './CalorieTracker';
 import ExerciseRoutines from './ExcerciseRoutines';
 import ExerciseIntervals from './ExcerciseInterval';
+import HomeScreen from './HomeScreen'
+import LoginScreen from './LoginScreen';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -13,10 +15,10 @@ const Tab = createBottomTabNavigator();
 //Navbar component (Nader said he'll work on this I think)
 const NavBar = ({ navigation }) => {
     return (
-        <Tab.Navigator
+        <Tab.Navigator 
         screenOptions={{
           header: () => null,
-          tabBarShowLabel: false,
+          tabBarShowLabel: false, 
           tabBarStyle: {
             position: 'absolute',
             bottom: 30,
@@ -30,6 +32,24 @@ const NavBar = ({ navigation }) => {
           }
         }}
       >
+        <Tab.Screen name='Home Screen' 
+          component={HomeScreen} 
+          options={{ 
+            tabBarIcon: ({focused}) => (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Image  source={require('../assets/home.png')} 
+                  resizeMode='contain'
+                  style={{
+                      width: 25,
+                      height: 25,
+                      
+                  }} 
+                  />
+                <Text style={{color: focused ? '#e32f45' : '#000', fontSize: 12}}>Home</Text>
+              </View>
+            ),
+          }}
+        />
         <Tab.Screen  
           name='Profile' 
           component={Profile} 

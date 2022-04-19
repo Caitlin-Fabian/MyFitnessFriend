@@ -1,7 +1,6 @@
 import { Text, View, Dimensions, Button, TextInput, StyleSheet, ScrollView, SafeAreaView, Pressable } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import User from '../database/user';
 import ErrorHandle from '../database/errorHandle'
 
 
@@ -40,6 +39,8 @@ function LoginScreen(props) {
           onAuthStateChanged(auth, (userInfo) => {
               if (userInfo) {
                   setUser(userInfo);
+                  console.log("Here is the auto login credentials: ", userInfo);
+                  console.log("Here are the props we have access to: ", props);
                   props.navigation.navigate('HomeScreen', { extraData: userInfo });
               }
           })
@@ -52,10 +53,10 @@ function LoginScreen(props) {
       <SafeAreaView style={styles.container}>
         <ScrollView style={{marginTop: 50}}>
           <View style={styles.header}>
-            <Text style={{textAlign: 'center', fontSize: 30, fontWeight: '300'}}>Welcome Back!</Text>
+            <Text style={{textAlign: 'center', fontSize: 35, fontWeight: '400'}}>Welcome Back!</Text>
           </View>
               <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.input} />
-            <TextInput placeholder="Password" onChangeText={(password) => setPassword(password)} secureTextEntry={true} style={styles.input} />
+              <TextInput placeholder="Password" onChangeText={(password) => setPassword(password)} secureTextEntry={true} style={styles.input} />
           <View style={styles.buttonHolder}>
             <Pressable style={({pressed}) => [
               {
@@ -99,11 +100,13 @@ const styles = StyleSheet.create({
      width: screenWidth * 0.7,
      height: screenWidth * 0.12,
      alignItems: 'center',
-     marginTop: 20
+     marginTop: 20,
+     backgroundColor: 'white'
   },
   header: {
     height: screenHeight * 0.1,
     padding: 25,
+    marginBottom: 20
   },
   button: {
     borderRadius: 10,
@@ -112,6 +115,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     padding: 5,
     width: screenWidth * 0.2,
+    backgroundColor: 'white'
   },
   buttonHolder: {
     flexDirection: 'column',
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     padding: 5,
     width: screenWidth * 0.4,
+    backgroundColor: 'white'
   }
 })
 
