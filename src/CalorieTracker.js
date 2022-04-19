@@ -11,10 +11,7 @@ const tableConfig = {
 
 }
 
-
-
-
-
+//Title
 
 
 
@@ -31,35 +28,67 @@ export default function App() {
     );
 }
 
-//Title
-
 
 //Dropdown
 const Dropdown = () => {
     return (
-        <View style={styles.box}>
-            <h1>Custom Select/dropdown</h1>
-            <DropDownContainer>
-              <DropDownHeader>Enter Food</DropDownHeader>
-              <DropDownListContainer>
-                <DropDownList>
-                  <ListItem>Mangoes</ListItem>
-                  <ListItem>Apples</ListItem>
-                  <ListItem>Oranges</ListItem>
-            </DropDownList>
-          </DropDownListContainer>
-        </DropDownContainer>
-      </View>
+      <View style={styles.box}>
+        <select name="pets" id="pet-select">
+        {
+        data.map((foodOptions) => (
+              <option key={foodOptions.id}>{foodOptions.name}</option>
+            ))
+        }
+</select>
+        </View>
     );
 }
 
 //SearchButton
+const button = () => {
+  return (
+    <View style = {Styles.Button}>
+      <button type = "Button"></button>
+    </View>
+  )
+}
 
 
 
+//Table
+const table = () => {
+  return (
+    <View style={styles.box}>
+      <table class = "calorieLog">
+        <title></title>
+        <thead class= "calorieTableLog">
+          <tr class = "calorieTableLog">
+            <td>Food</td>
+            <td>Calories</td>
+          </tr>
+        </thead>
+        <tbody class ="calorieTableLog">
+          {
+            data.map((food) => (
+              <tr key={food.id}>
+                <td>{food.name}</td>
+                <td>{food.calorie}</td>
+                <td/>
+                </tr>
+            ))
+          }
+        </tbody>
+        <tfoot>
+          <td>Total Calories: </td>
+          <td id="totalCalories">0</td>
+        </tfoot>
+      </table>
+    </View>
+  )
+}
 
 
-//NavBar stuff I stole
+//NavBar
 const NavBar = () => {
     return (
       <View style={styles.navBar}>
