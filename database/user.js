@@ -3,6 +3,8 @@ import { getFirestore, collection, getDocs, addDoc, setDoc, doc, getDoc, arrayUn
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import ErrorHandle from './errorHandle'
 
+//Class to handle most of the firebase interactions with the user
+
 class User {
     constructor(username = null, email = null, password = null) {
         this.username = username;
@@ -79,6 +81,11 @@ class User {
       } else {
         console.log("Cannot find doc with that UID: ", uid);
       }
+
+    }
+
+    //This function will take in the routines in the form {RoutineName: xxx, Workouts: [{workout_name: xxx, sets: xx, reps: xx}]}
+    static async addRoutines(data, uid) {
 
     }
 }

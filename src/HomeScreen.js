@@ -65,7 +65,7 @@ function AppHeader() {
       alignItems='center'
       justifyContent='center'
       marginBottom={25}
-      marginTop={0}
+      marginTop={10}
     >
       <Text style={{ fontSize: 40, fontWeight: 'bold' }}>MyFitnessFriend</Text>
     </View>
@@ -155,7 +155,7 @@ const Graph = (props) => {
         Your Weight This Week
       </Text>
       <LineChart data={{
-        labels: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
+        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         datasets: [
           {
             data: props.weights.map(x => x)   //Now the data is just pulled from the weights state, so we can change it on the fly
@@ -238,7 +238,7 @@ const PopUp = (props) => {
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.textStyle}>Add...</Text>
+        <Text style={styles.textStyle}>+</Text>
       </Pressable>
     </View>
   );
@@ -269,15 +269,15 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 20,
-    padding: 10,
+    padding: 8,
     elevation: 2,
     position: 'absolute',
     bottom: 250,
-    left: 90
+    left: 130
   },
 
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: "black",
   },
   buttonClose: {
     backgroundColor: "#2196F3",
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1.5,
     width: (screenWidth * 0.8),
-    height: (screenHeight * 0.2),
+    minHeight: (screenHeight * 0.15),
     justifyContent: 'center',
     backgroundColor: '#E8CCBF',
   },

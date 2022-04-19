@@ -1,3 +1,4 @@
+//Class used to parse error codes from firebase
 class ErrorHandle {
 
   static parseError(errorCode) {

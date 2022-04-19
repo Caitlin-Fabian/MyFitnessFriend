@@ -29,7 +29,7 @@ function Profile({ navigation }) {
     const LogOut = () => {
         const auth = getAuth();
         signOut(auth).then(() => {
-            navigation.navigate('RegistrationScreen', { extraData: {} });
+            navigation.navigate('LoginScreen', { extraData: {} });
         })
 
     }
