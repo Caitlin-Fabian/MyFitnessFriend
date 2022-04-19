@@ -122,7 +122,8 @@ const CheesyQuote = () => {
 
   return (
     <View style={styles.componentHolder} >
-      <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"} - {quote ? author : ""}</Text>
+      <Text style={{textAlign: 'center', fontWeight: 'bold', marginBottom: 8}}>{author ? author: "Unknown"}</Text>
+      <Text style={{ fontSize: 15, fontWeight: '400' }} >{quote ? inspo : "Loading"}</Text>
     </View>
   )
 }
