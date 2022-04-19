@@ -46,8 +46,8 @@ function HomeScreen(props) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
-        <AppHeader />
-        <WelcomeText daily='100' max='2000' displayName={displayName} />
+        <AppHeader displayName={displayName}/>
+        <WelcomeText daily='100' max='2000' />
         <CheesyQuote />
         <Graph weights={weights} infoHandle={setUserInfo} weightRefresh={weightDataHandler} />
         <StatusBar style="auto" showHideTransition={'fade'} translucent={true} backgroundColor='transparent'/>
@@ -57,7 +57,7 @@ function HomeScreen(props) {
   );
 }
 
-function AppHeader() {
+function AppHeader(props) {
   return (
     <View
       flex={1}
@@ -67,7 +67,7 @@ function AppHeader() {
       marginBottom={25}
       marginTop={10}
     >
-      <Text style={{ fontSize: 40, fontWeight: 'bold' }}>MyFitnessFriend</Text>
+      <Text style={{ fontSize: 22, fontWeight: 'bold', marginTop: 20, textAlign: 'center'}}>Welcome Back, {props.displayName ? props.displayName : "Unknown"}!</Text>
     </View>
   )
 }
@@ -76,7 +76,6 @@ function AppHeader() {
 const WelcomeText = (props) => {
   return (
     <View style={styles.componentHolder} >
-      <Text style={{ fontSize: 18, fontWeight: '500' }}>Welcome Back, {props.displayName ? props.displayName : "Unknown"}!</Text>
       <Text style={{ fontSize: 18, fontWeight: '500' }}>Calorie Goal for the Day</Text>
       <Text style={{ fontSize: 18, fontWeight: '500' }}>{props.daily}/{props.max}</Text>
     </View>
@@ -151,7 +150,7 @@ const Graph = (props) => {
 
   return (
     <View style={styles.graphHolder}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 15 }}>
         Your Weight This Week
       </Text>
       <LineChart data={{
@@ -176,7 +175,7 @@ const Graph = (props) => {
           borderColor: 'black',
           borderWidth: 1,
           borderRadius: 15,
-          marginTop: 5
+          
         }}
       />
       <PopUp infoHandle={props} refresh={setRefresh} data={refresh} />
@@ -306,7 +305,7 @@ const styles = StyleSheet.create({
   graphHolder: {
     flex: 3,
     flexDirection: 'column',
-    marginTop: 50,
+    marginTop: 30,
     padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
@@ -316,6 +315,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     margin: 5,
     padding: 20,
+    borderRadius: 15,
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1.5,
