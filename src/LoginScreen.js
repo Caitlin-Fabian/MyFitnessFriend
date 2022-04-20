@@ -1,7 +1,8 @@
-import { Text, View, Dimensions, Button, TextInput } from 'react-native';
-import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import User from '../database/user';
+import { Text, View, Dimensions, Button, TextInput, StyleSheet, ScrollView, SafeAreaView, Pressable, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import ErrorHandle from '../database/errorHandle'
+
 
 
 
@@ -9,47 +10,133 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 
-function LoginScreen({ navigation }) {
-    const [username, setUsername] = useState(null);
-    const [password, setPassword] = useState(null);
-    const [email, setEmail] = useState(null);
+function LoginScreen(props) {
+  const [user, setUser] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState(null);
 
-    async function signIn() {
-        const auth = getAuth();
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                navigation.navigate('HomeScreen', { username: user.displayName });
-            })
-            .catch((err) => {
-                console.log(err.code, err.message);
-            })
+  async function signIn() {
+    const auth = getAuth();
+    if (email && password) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log("User Credentials", userCredential);
+          props.navigation.navigate('HomeScreen', { extraData: userCredential });
+          setEmail(null);
+          setPassword(null);
+        })
+        .catch((err) => {
+          console.log(err.code, err.message);
+          alert(ErrorHandle.parseError(err.code))
+        })
+    } else {
+      alert("Missing Info!");
+    }
+  }
+
+  useEffect(() => {
+    const auth = getAuth();
+    if (!user) {
+      onAuthStateChanged(auth, (userInfo) => {
+        if (userInfo) {
+          setUser(userInfo);
+          console.log("Here is the auto login credentials: ", userInfo);
+          console.log("Here are the props we have access to: ", props);
+          props.navigation.navigate('HomeScreen', { extraData: userInfo });
+        }
+      })
     }
 
+  }, [])
 
-    return (
-        <View
-            flex={1}
-            backgroundColor='#96BDC6'
-            alignItems='center'
-            justifyContent="space-between"
-            paddingTop={screenHeight * 0.1}
-            paddingBottom={screenHeight * 0.15}
-            width={screenWidth}
-            height={screenHeight}
-        >
-            <Text flex={1}>Register Below</Text>
-            <TextInput placeholder="Username" onChangeText={(username) => setUsername(username)} style={{ padding: 15, borderWidth: 1, borderColor: 'black', borderRadius: 35, width: screenWidth * 0.8, height: screenWidth * 0.1 }} />
-            <TextInput placeholder="Password" onChangeText={(password) => setPassword(password)} style={{ padding: 15, borderWidth: 1, borderColor: 'black', borderRadius: 35, width: screenWidth * 0.8, height: screenWidth * 0.1 }} />
-            <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={{ padding: 15, borderWidth: 1, borderColor: 'black', borderRadius: 35, width: screenWidth * 0.8, height: screenWidth * 0.1 }} />
-            <Button title="Submit!" onPress={() => signIn()} />
-            <Button
-                title="Create an Account"
-                onPress={() => navigation.navigate('ExerciseRoutines')}></Button>
 
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={{ marginTop: 50 }}>
+
+        <View style={styles.header}>
+          <Image source={require('../assets/logo1.png')}
+            resizeMode='contain'
+            style={{
+              width: 150,
+              height: 150,
+              marginTop: 50
+            }} />
         </View>
-    )
+        <View style={styles.form}>
+          <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.input} value={email} />
+          <TextInput placeholder="Password" onChangeText={(password) => setPassword(password)} secureTextEntry={true} style={styles.input} value={password} />
+          <View style={styles.buttonHolder}>
+            <TouchableOpacity style={styles.button} onPress={() => signIn()}>
+              <Text style={{ textAlign: 'center', flex: 1 }}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton} onPress={() => props.navigation.navigate('RegistrationScreen')}>
+              <Text style={{ textAlign: 'center', flex: 1 }}>Create an Account</Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#96BDC6',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: screenHeight,
+    minWidth: screenWidth,
+    flexDirection: 'column',
+    flex: 1
+  },
+  input: {
+    padding: 12,
+    fontSize: 14,
+    borderWidth: 1.5,
+    borderColor: 'black',
+    borderRadius: 10,
+    width: screenWidth * 0.7,
+    height: screenWidth * 0.12,
+    alignItems: 'center',
+    marginTop: 20,
+    backgroundColor: 'white'
+  },
+  header: {
+    height: screenHeight * 0.1,
+    padding: 25,
+    marginBottom: 20,
+    alignItems: 'center'
+  },
+  button: {
+    borderRadius: 10,
+    marginTop: 20,
+    borderColor: 'black',
+    borderWidth: 1.5,
+    padding: 13,
+    width: screenWidth * 0.2,
+    backgroundColor: 'white'
+  },
+  buttonHolder: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  navButton: {
+    borderRadius: 10,
+    marginTop: 20,
+    borderColor: 'black',
+    borderWidth: 1.5,
+    padding: 5,
+    width: screenWidth * 0.4,
+    backgroundColor: 'white'
+  },
+  form: {
+    marginTop: 150
+  }
+})
 
 export default LoginScreen;
