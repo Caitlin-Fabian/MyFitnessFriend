@@ -1,57 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Dimensions } from 'react-native';
 import React, { useState } from 'react';
-
+import SearchBar from "./CalorieTrackerComponenents/SearchBar";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
-
-//Decided that everything is bad making dynamic table with searh feature separate
-
-const tableConfig = {
-
-}
 
 //Title
 
 
 
 //CalorieTracker Screen
-export default function App() {
+function CalorieTrackerScreen() {
     return (
-        <View style={styles.container}>
-        <Title />
-        <Dropdown />
-        <SearchButton />
-        <StatusBar style="auto" showHideTransition={'fade'} />
-        <NavBar />
-    </View>
+        <div className="App">
+          <SearchBar placeholder = "Enter Food Item" data = {FoodData} />
+        </div>
     );
 }
-
-
-//Dropdown
-const Dropdown = () => {
-    return (
-      <View style={styles.box}>
-        <select name="pets" id="pet-select">
-        {
-        data.map((foodOptions) => (
-              <option key={foodOptions.id}>{foodOptions.name}</option>
-            ))
-        }
-</select>
-        </View>
-    );
-}
-
-//SearchButton
-const button = () => {
-  return (
-    <View style = {Styles.Button}>
-      <button type = "Button"></button>
-    </View>
-  )
-}
+//On Select from the Search Bar add piece of data to a table
 
 
 
