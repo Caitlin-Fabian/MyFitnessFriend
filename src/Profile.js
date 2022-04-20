@@ -3,20 +3,32 @@ import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, Touchabl
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import User from '../database/user';
-import { getAuth, signOut, updateProfile } from "firebase/auth";
+import { getAuth, signOut, updateProfile,fireStore } from "firebase/auth";
 import { Alert } from 'react-native-web';
 
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-function Profile({ navigation }) {
-
-    const [userData, setUserData] = useState(null);
-    const [display, setUsername] = useState('');
+function Profile({ navigation,props }) {
+    
+    const [displayName, setUsername] = useState('');
     const [gender, setGender] = useState('');
     const [age, setAge] = useState('');
-    const [email, setEmail] = useState('');
+    const [edit, setEdit] = useState(false);
+
+    const [refresh, setRefresh] = useState(0);
+    const [userData, setUserData] = useState(null);
+
+    function infoHandler(){
+        let newName = userData.displayName;
+        let newAge = userData.age;
+        let newGender = userData.gender;
+
+        setUsername(newName);
+        setAge(newAge);
+        setGender(newGender);
+    }
 
     useEffect(async () => {
         if (userData === null) {
@@ -24,6 +36,7 @@ function Profile({ navigation }) {
             const { uid } = auth.currentUser;
             const userData = await User.getUserInfo(uid);
             setUserData(userData);
+            //infoHandler();
         }
     })
     const LogOut = () => {
@@ -34,37 +47,12 @@ function Profile({ navigation }) {
 
     }
 
-    const [edit, setEdit] = useState(false);
-
-    const changeUserName = (val) => {
-        setUsername(val);
-    };
-
-    const changeAge = (val) => {
-        setAge(val);
-    };
-
-    const changeGender = (val) => {
-        setGender(val);
-    };
-
-    const handleUpdate = async () => {
-
-        fireStore()
-            .collection('users')
-            .doc(user.uid)
-            .update({
-                displayName: userData.displayName,
-                age: userData.age,
-                gender: userData.gender,
-            })
-            .then(() => {
-                console.log('User Updated');
-                Alert.alert('Profile Updated!');
-            })
+    function EditInfo (displayName,age, gender) {
+        const auth = getAuth();
+        const newInfo = new User.updateInfo(displayName,gender,age, auth.currentUser.uid);
+        infoHandler(newInfo);   //Sets the new userInfo in the parent component
     }
-
-
+    
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={{ backgroundColor: '#96BDC6', flex: 1 }}>
@@ -86,41 +74,43 @@ function Profile({ navigation }) {
 
                     <Image
                         style={styles.userImg}
-                        source={userData ? userData.userImg : { uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg" }}
+                        source={require('../assets/Larry.png')}
                     />
                     <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
                     <Text style={styles.titleBar}> Age {userData ? userData.age : "0"} </Text>
-                    <Text style={styles.titleBar}> Gender {userData ? userData.Gender : "Female"} </Text>
+                    <Text style={styles.titleBar}> Gender {userData ? userData.Gender : ""} </Text>
                     <Text style={styles.titleBar}> Height {userData ? userData.Height : "0"} </Text>
 
                 </View>
 
+                <View>
                 <Modal visible={edit}>
-                    <View style={styles.container}>
-                        <Image
-                            style={styles.userImg}
-                            source={{ uri: "https://images.dog.ceo/breeds/poodle-miniature/n02113712_3049.jpg" }}
-                        />
-                        <Text style={{ fontSize: 36, padding: 10 }}>Profile Edit</Text>
-                        <TextInput
-                            style={styles.inputContainer}
-                            placeholder='UserName'
-                            onChangeText={changeUserName}
-                        />
-                        <TextInput
-                            style={styles.inputContainer}
-                            placeholder='Age'
-                            onChangeText={changeAge}
-                        />
-                        <TextInput
-                            style={styles.inputContainer}
-                            placeholder='Gender'
-                            onChangeText={changeGender}
-                        />
-                        <Button title='exit' onPress={() => setEdit(false)} />
-                        <Button title='Save' onPress={() => handleUpdate()} />
-                    </View>
-                </Modal>
+                <View style={styles.container}>
+                    
+                    <Text style={{ fontSize: 36, padding: 10 }}>Profile Edit</Text>
+                    <TextInput
+                        style={styles.inputContainer}
+                        placeholder='UserName'
+                        onChange={text => setUsername(text)}
+                    />
+                    <TextInput
+                        style={styles.inputContainer}
+                        placeholder='Age'
+                        onChangeText={text => setAge(text)}
+                    />
+                    <TextInput
+                        style={styles.inputContainer}
+                        placeholder='Gender'
+                        onChangeText={text => setGender(text)}
+                    />
+                    <Button title='exit' onPress={() => setEdit(false)} />
+                    <Button title='Save' onPress={() => {
+                        EditInfo(displayName, age, gender);
+                        setEdit(false);
+                    }}/>
+                </View>
+            </Modal>
+            </View>
 
 
             </ScrollView>
@@ -128,7 +118,10 @@ function Profile({ navigation }) {
 
 
     );
+
+    
 }
+
 
 const styles = StyleSheet.create({
     container: {

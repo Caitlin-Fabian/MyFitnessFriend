@@ -36,7 +36,8 @@ class User {
                             calories: [],
                             friends: [],
                             calorieGoal: 0,
-                            displayName: this.username
+                            displayName: this.username,
+                            userImg: 'null',
                         })
                         return user;
                     })
@@ -87,6 +88,20 @@ class User {
     //This function will take in the routines in the form {RoutineName: xxx, Workouts: [{workout_name: xxx, sets: xx, reps: xx}]}
     static async addRoutines(data, uid) {
 
+    }
+
+    static async updateInfo(name,gender, age, uid){
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+      if(docSnap.exists()){
+        const userData = docSnap.data();
+        await updateDoc(docRef, userData.displayName = name);
+        await updateDoc(docRef, userData.gender = gender);
+        await updateDoc(docRef, userData.age = age);
+
+        const docData = await getDoc(docRef);
+        return docData.data();
+    }
     }
 }
 
