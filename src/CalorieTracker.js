@@ -9,10 +9,22 @@ const screenHeight = Dimensions.get("window").height;
 
 
 //CalorieTracker Screen
-function CalorieTrackerScreen() {
+function CalorieTrackerScreen({navigation}) {
     return (
         <div className="App">
           <SearchBar placeholder = "Enter Food Item" data = {FoodData} />
+          <View
+            flex={1}
+            backgroundColor='#96BDC6'
+            alignItems='center'
+            justifyContent='center'
+            paddingTop={screenHeight * 0.1}
+            paddingBottom={screenHeight * 0.15}
+            width={screenWidth}
+            height={screenHeight}
+        >
+            <Text>Hello!</Text>
+        </View>
         </div>
     );
 }
@@ -61,21 +73,6 @@ const NavBar = () => {
       </View>
     )
   }
-function CalorieTrackerScreen({ navigation }) {
-    return (
-        <View
-            flex={1}
-            backgroundColor='#96BDC6'
-            alignItems='center'
-            justifyContent='center'
-            paddingTop={screenHeight * 0.1}
-            paddingBottom={screenHeight * 0.15}
-            width={screenWidth}
-            height={screenHeight}
-        >
-            <Text>Hello!</Text>
-        </View>
-    )
-}
+
 
 export default CalorieTrackerScreen;

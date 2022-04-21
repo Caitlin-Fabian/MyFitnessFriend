@@ -90,14 +90,17 @@ class User {
 
     }
 
-    static async updateInfo(name,gender, age, uid){
+    static async updateInfo(name,gender,age, uid){
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
       if(docSnap.exists()){
         const userData = docSnap.data();
-        await updateDoc(docRef, userData.displayName = name);
-        await updateDoc(docRef, userData.gender = gender);
-        await updateDoc(docRef, userData.age = age);
+        await updateDoc(docRef, {
+          displayName: name,
+          age: age,
+          gender: gender,
+          height: height,
+        });
 
         const docData = await getDoc(docRef);
         return docData.data();

@@ -1,11 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, TouchableOpacity, Modal, TextInput} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import User from '../database/user';
 import { getAuth, signOut, updateProfile,fireStore } from "firebase/auth";
-import { Alert } from 'react-native-web';
-
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -15,6 +13,7 @@ function Profile({ navigation,props }) {
     const [displayName, setUsername] = useState('');
     const [gender, setGender] = useState('');
     const [age, setAge] = useState('');
+    const [height, setHeight] = useState('');
     const [edit, setEdit] = useState(false);
 
     const [refresh, setRefresh] = useState(0);
@@ -36,7 +35,8 @@ function Profile({ navigation,props }) {
             const { uid } = auth.currentUser;
             const userData = await User.getUserInfo(uid);
             setUserData(userData);
-            //infoHandler();
+            infoHandler();
+            window.location.reload();
         }
     })
     const LogOut = () => {
@@ -47,16 +47,16 @@ function Profile({ navigation,props }) {
 
     }
 
-    function EditInfo (displayName,age, gender) {
+    const EditInfo = (displayName,age, gender) =>{
         const auth = getAuth();
         const newInfo = new User.updateInfo(displayName,gender,age, auth.currentUser.uid);
         infoHandler(newInfo);   //Sets the new userInfo in the parent component
     }
-    
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={{ backgroundColor: '#96BDC6', flex: 1 }}>
-                <View style={styles.container}>
+                <View style={styles.container} infoRefresh={infoHandler}>
                     <View >
                         <TouchableOpacity
                             onPress={() => LogOut()}
@@ -77,9 +77,11 @@ function Profile({ navigation,props }) {
                         source={require('../assets/Larry.png')}
                     />
                     <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
-                    <Text style={styles.titleBar}> Age {userData ? userData.age : "0"} </Text>
-                    <Text style={styles.titleBar}> Gender {userData ? userData.Gender : ""} </Text>
-                    <Text style={styles.titleBar}> Height {userData ? userData.Height : "0"} </Text>
+                    <Text style={styles.titleBar}> Age: {userData ? userData.age : "0"} </Text>
+                    <Text style={styles.titleBar}> Gender: {userData ? userData.Gender : "Person"} </Text>
+                    <Text style={styles.titleBar}> Height: {userData ? userData.Height : "0"} </Text>
+                    <Text style = {{fontSize: 20, fontWeight: 'bold', marginTop: 20, textAlign: 'center',justifyContent: "space-between",}}>Friends: </Text> 
+                    <FriendChart/>
 
                 </View>
 
@@ -103,6 +105,12 @@ function Profile({ navigation,props }) {
                         placeholder='Gender'
                         onChangeText={text => setGender(text)}
                     />
+                    <TextInput
+                        style={styles.inputContainer}
+                        placeholder='Height'
+                        onChangeText={text => setHeight(text)}
+                    />
+
                     <Button title='exit' onPress={() => setEdit(false)} />
                     <Button title='Save' onPress={() => {
                         EditInfo(displayName, age, gender);
@@ -112,7 +120,6 @@ function Profile({ navigation,props }) {
             </Modal>
             </View>
 
-
             </ScrollView>
         </SafeAreaView>
 
@@ -120,6 +127,13 @@ function Profile({ navigation,props }) {
     );
 
     
+}
+const FriendChart = () => {
+    return(
+        <View style={styles.graphHolder}>
+
+        </View>
+    )
 }
 
 
@@ -171,6 +185,21 @@ const styles = StyleSheet.create({
         width: 200,
         padding: 8,
         marginVertical: 10
+    },
+    graphHolder: {
+        flex: 1,
+        flexDirection: 'row',
+        margin: 5,
+        borderRadius: 15,
+        alignItems: 'center',
+        borderColor: 'black',
+        borderWidth: 1.5,
+        marginHorizontal: 20,
+        marginTop: 10,
+        width: (screenWidth * 0.8),
+        minHeight: (screenHeight * 0.15),
+        justifyContent: 'center',
+        backgroundColor: '#E8CCBF',
     },
 });
 
