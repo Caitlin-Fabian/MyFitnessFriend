@@ -76,10 +76,12 @@ function Profile({ navigation, props }) {
                         source={require('../assets/Larry.png')}
                     />
                     <View style={styles.userInfo}>
-                        <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
-                        <Text style={styles.titleBar}> Age: {userData ? userData.age : "0"} </Text>
-                        <Text style={styles.titleBar}> Gender: {userData ? userData.gender : "Person"} </Text>
-                        <Text style={styles.titleBar}> Height: {userData ? userData.height : "0"} </Text>
+                       
+                        <Text style={{fontSize: 26, textAlign: 'center', fontWeight: 'bold'}}>{userData ? userData.displayName : "User Name"} </Text>
+                        
+                        <Text style={styles.infoText}> Age: {userData ? userData.age : "0"} </Text>
+                        <Text style={styles.infoText}> Gender: {userData ? userData.gender : "Person"} </Text>
+                        <Text style={styles.infoText}> Height: {userData ? userData.height : "0"} </Text>
                     </View>
                     <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, textAlign: 'center', justifyContent: "space-between", }}>Friends: </Text>
                     <FriendChart />
@@ -180,11 +182,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
     },
-    titleBar: {
+    infoText: {
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 24,
-        marginHorizontal: 16
+        marginHorizontal: 16,
+        
     },
     inputContainer: {
         borderColor: '#000000',
