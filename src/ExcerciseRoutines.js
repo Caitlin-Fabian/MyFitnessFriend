@@ -14,7 +14,6 @@ function ExerciseRoutines() {
         setRoutines((prevRoutines) => {
             const tempRoutineIndex = prevRoutines.findIndex(routine => routineName === routine.name)
             prevRoutines[tempRoutineIndex].workouts = prevRoutines[tempRoutineIndex].workouts.filter(workout => workout.name !== name)
-            console.log(prevRoutines)
             return [ ...prevRoutines ]
         })
     }
@@ -26,11 +25,6 @@ function ExerciseRoutines() {
             setUserInfo(userData);
             setRoutines(userData.workOuts);
         }
-        console.log("Here is the routineNameText: ", routineNameText);
-        console.log("Here is the nameText: ", nameText);
-        console.log("Here is the repText: ", repText);
-        console.log("Here is the setText: ", setText);
-        console.log("Here are the routines: ", routines);
     })
 
     const [userInfo, setUserInfo] = useState(null);
@@ -62,10 +56,6 @@ function ExerciseRoutines() {
                 ...prevRoutines,
             ]
             tempRoutines.find(routine => routine.name === routineName)?.workouts.push({ name, reps, sets })
-            console.log("Here are the routines in the submitAddWorkoutHandler: ", tempRoutines);
-            // tempRoutines.map(routine => {
-            //     User.addRoutines(routine, userInfo.uid)
-            // })
             User.addRoutines(tempRoutines, userInfo.uid);
             return tempRoutines;
         })
@@ -77,7 +67,6 @@ function ExerciseRoutines() {
                 ...prevRoutines,
             ]
             tempRoutines.push({ name: routineName, workouts: [] })
-            console.log("Here are the routines in the submitAddRoutineHandler: ", tempRoutines);
             return tempRoutines
         })
     }
