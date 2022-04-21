@@ -2,11 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View, Dimensions, Image } from 'react-native';
 import Profile from './Profile';
-import CalorieTrackerScreen from './CalorieTracker';
 import ExerciseRoutines from './ExcerciseRoutines';
-import ExerciseIntervals from './ExcerciseInterval';
 import HomeScreen from './HomeScreen'
-import LoginScreen from './LoginScreen';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -68,23 +65,6 @@ const NavBar = ({ navigation }) => {
             ),
           }}
         />
-        <Tab.Screen name='Calorie Tracker' 
-          component={CalorieTrackerScreen} 
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image  source={require('../assets/fire.png')} 
-                  resizeMode='contain'
-                  style={{
-                      width: 25,
-                      height: 25
-                  }}
-                  />
-                <Text style={{color: focused ? '#e32f45' : '#000', fontSize: 12}}>Calories</Text>
-              </View>
-            ),
-          }}
-        />
         <Tab.Screen name='Exercise Routines' 
           component={ExerciseRoutines} 
           options={{
@@ -102,24 +82,6 @@ const NavBar = ({ navigation }) => {
             ),
           }}
         />
-        <Tab.Screen name='Exercise Intervals' 
-          component={ExerciseIntervals} 
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Image  source={require('../assets/stopwatch.png')} 
-                  resizeMode='contain'
-                  style={{
-                      width: 25,
-                      height: 25
-                  }}
-                  />
-                <Text style={{color: focused ? '#e32f45' : '#000', fontSize: 12}}>Intervals</Text>
-              </View>
-            ),
-          }}
-        />
-
       </Tab.Navigator>
 
 
