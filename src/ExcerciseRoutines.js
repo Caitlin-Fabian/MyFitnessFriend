@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, Dimensions, TextInput, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, Button, Dimensions, TextInput, ScrollView, TouchableOpacity, Modal, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import User from '../database/user';
 import { getAuth } from 'firebase/auth';
@@ -49,26 +49,38 @@ function ExerciseRoutines() {
 
     const submitAddWorkoutHandler = async (name, reps, sets, routineName) => {
         // checks if fields are empty
-        if (name && reps && sets)
-
+        if (!name || !reps || !sets)
+        {
+            Alert.alert('Alert', 'Make sure there are no empty fields', [
+                {text: 'Ok', onPress: () => console.log('alert close')}
+            ])
+        }
+        else 
         setRoutines((prevRoutines) => {
             const tempRoutines = [
                 ...prevRoutines,
             ]
             tempRoutines.find(routine => routine.name === routineName)?.workouts.push({ name, reps, sets })
             User.addRoutines(tempRoutines, userInfo.uid);
+            closeAddWorkoutModal()
             return tempRoutines;
         })
     }
 
     const submitAddRoutineHandler = (routineName) => {
-        setRoutines((prevRoutines) => {
-            const tempRoutines = [
-                ...prevRoutines,
-            ]
-            tempRoutines.push({ name: routineName, workouts: [] })
-            return tempRoutines
-        })
+        if (!routineName)
+            Alert.alert('Alert', 'Make sure there are no empty fields', [
+                {text: 'Ok', onPress: () => console.log('alert close')}
+            ])
+        else
+            setRoutines((prevRoutines) => {
+                const tempRoutines = [
+                    ...prevRoutines,
+                ]
+                tempRoutines.push({ name: routineName, workouts: [] })
+                closeAddRoutineModal()
+                return tempRoutines
+            })
     }
 
     const [routines, setRoutines] = useState([
@@ -92,7 +104,7 @@ function ExerciseRoutines() {
     }
     const addWorkout = (nameText, repText, setText) => {
         submitAddWorkoutHandler(nameText, repText, setText, addWorkoutModal.routineName);
-        closeAddWorkoutModal()
+        
     }
 
     const deleteRoutineHelper = (routineName) => {
@@ -112,7 +124,6 @@ function ExerciseRoutines() {
 
     const addRoutine = (routineName) => {
         submitAddRoutineHandler(routineName)
-        closeAddRoutineModal()
     }
     
     return (
