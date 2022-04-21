@@ -33,6 +33,10 @@ function ExerciseRoutines() {
     const [repText, setRepText] = useState('');
     const [setText, setSetText] = useState('');
     const [routineNameText, setRoutineNameText] = useState('');
+    
+    const [editNameText, setEditNameText] = useState('');
+    const [editRepText, setEditRepText] = useState('');
+    const [editSetText, setEditSetText] = useState('');
 
     const changeNameHandler = (val) => {
         setNameText(val);
@@ -42,6 +46,16 @@ function ExerciseRoutines() {
     }
     const changeSetHandler = (val) => {
         setSetText(val.replace(/[^0-9]/g, ''))
+    };
+
+    const changeEditNameHandler = (val) => {
+        setEditNameText(val);
+    }
+    const changeEditRepHandler = (val) => {
+        setEditRepText(val.replace(/[^0-9]/g, ''));
+    }
+    const changeEditSetHandler = (val) => {
+        setEditSetText(val.replace(/[^0-9]/g, ''))
     };
 
     const changeRoutineNameHandler = (val) => {
@@ -65,6 +79,30 @@ function ExerciseRoutines() {
                 changeRepHandler('')
                 changeSetHandler('')
                 changeNameHandler('')
+                return tempRoutines;
+            })
+    }
+
+    const submitEditWorkoutHandler = async (name, reps, sets, routineName, workoutName) => {
+        // checks if fields are empty
+        if (!name || !reps || !sets) {
+            Alert.alert('Alert', 'Make sure there are no empty fields', [
+                { text: 'Ok', onPress: () => console.log('alert close') }
+            ])
+        }
+        else
+            setRoutines((prevRoutines) => {
+                const tempRoutines = [
+                    ...prevRoutines,
+                ]
+                const tempWorkoutIndex = tempRoutines.find(routine => routine.name === routineName)?.workouts.find(workout => workout.name === workoutName)
+                tempWorkoutIndex.name = name
+                tempWorkoutIndex.reps = reps
+                tempWorkoutIndex.sets = sets
+                setEditWorkoutModal({open: false, routineName: null, workoutName: null})
+                changeEditRepHandler('')
+                changeEditSetHandler('')
+                changeEditNameHandler('')
                 return tempRoutines;
             })
     }
@@ -170,23 +208,23 @@ function ExerciseRoutines() {
                                         <TextInput
                                             style={styles.inputContainer}
                                             placeholder='workout name'
-                                            onChangeText={changeNameHandler}
+                                            onChangeText={changeEditNameHandler}
                                         />
                                         <TextInput
                                             style={styles.inputContainer}
                                             placeholder='rep number'
                                             keyBoardType='numeric'
-                                            onChangeText={changeRepHandler}
+                                            onChangeText={changeEditRepHandler}
                                         />
                                         <TextInput
                                             style={styles.inputContainer}
                                             placeholder='set number'
                                             keyBoardType='numeric'
-                                            onChangeText={changeSetHandler}
+                                            onChangeText={changeEditSetHandler}
                                         />
                                         <Button title='exit' onPress={() => setEditWorkoutModal({ open: false, routineName: null, workoutName: null })} />
                                         <Button title='delete workout' onPress={() =>  workoutPressHandler(editWorkoutModal.workoutName, editWorkoutModal.routineName)} />
-                                        <Button title='edit' onPress={() => addWorkout(nameText, repText, setText)} />
+                                        <Button title='edit' onPress={() => submitEditWorkoutHandler(editNameText, editRepText, editSetText, editWorkoutModal.routineName, editWorkoutModal.workoutName)} />
                                     </View>
                                 </View>
                             </Modal>
