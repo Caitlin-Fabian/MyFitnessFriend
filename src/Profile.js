@@ -23,10 +23,6 @@ function Profile({ navigation,props }) {
         let newName = userData.displayName;
         let newAge = userData.age;
         let newGender = userData.gender;
-
-        setUsername(newName);
-        setAge(newAge);
-        setGender(newGender);
     }
 
     useEffect(async () => {
@@ -36,7 +32,7 @@ function Profile({ navigation,props }) {
             const userData = await User.getUserInfo(uid);
             setUserData(userData);
             infoHandler();
-            window.location.reload();
+            console.log(auth);
         }
     })
     const LogOut = () => {
@@ -47,10 +43,13 @@ function Profile({ navigation,props }) {
 
     }
 
-    const EditInfo = (displayName,age, gender) =>{
+    const EditInfo = async () =>{
         const auth = getAuth();
-        const newInfo = new User.updateInfo(displayName,gender,age, auth.currentUser.uid);
+        const newInfo = await User.updateInfo(displayName,gender,age,height, auth.currentUser.uid);
+        console.log(newInfo);
+        setUserData(newInfo);
         infoHandler(newInfo);   //Sets the new userInfo in the parent component
+        setRefresh();
     }
 
     return (
@@ -78,8 +77,8 @@ function Profile({ navigation,props }) {
                     />
                     <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
                     <Text style={styles.titleBar}> Age: {userData ? userData.age : "0"} </Text>
-                    <Text style={styles.titleBar}> Gender: {userData ? userData.Gender : "Person"} </Text>
-                    <Text style={styles.titleBar}> Height: {userData ? userData.Height : "0"} </Text>
+                    <Text style={styles.titleBar}> Gender: {userData ? userData.gender : "Person"} </Text>
+                    <Text style={styles.titleBar}> Height: {userData ? userData.height : "0"} </Text>
                     <Text style = {{fontSize: 20, fontWeight: 'bold', marginTop: 20, textAlign: 'center',justifyContent: "space-between",}}>Friends: </Text> 
                     <FriendChart/>
 
@@ -93,7 +92,7 @@ function Profile({ navigation,props }) {
                     <TextInput
                         style={styles.inputContainer}
                         placeholder='UserName'
-                        onChange={text => setUsername(text)}
+                        onChangeText={text => setUsername(text)}
                     />
                     <TextInput
                         style={styles.inputContainer}
@@ -113,7 +112,8 @@ function Profile({ navigation,props }) {
 
                     <Button title='exit' onPress={() => setEdit(false)} />
                     <Button title='Save' onPress={() => {
-                        EditInfo(displayName, age, gender);
+                        EditInfo();
+                        setRefresh();
                         setEdit(false);
                     }}/>
                 </View>
