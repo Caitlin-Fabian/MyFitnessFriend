@@ -1,15 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, TouchableOpacity, Modal, TextInput} from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Button, Dimensions, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import User from '../database/user';
-import { getAuth, signOut, updateProfile,fireStore } from "firebase/auth";
+import { getAuth, signOut, updateProfile, fireStore } from "firebase/auth";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-function Profile({ navigation,props }) {
-    
+function Profile({ navigation, props }) {
+
     const [displayName, setUsername] = useState('');
     const [gender, setGender] = useState('');
     const [age, setAge] = useState('');
@@ -19,7 +19,7 @@ function Profile({ navigation,props }) {
     const [refresh, setRefresh] = useState(0);
     const [userData, setUserData] = useState(null);
 
-    function infoHandler(){
+    function infoHandler() {
         let newName = userData.displayName;
         let newAge = userData.age;
         let newGender = userData.gender;
@@ -43,9 +43,9 @@ function Profile({ navigation,props }) {
 
     }
 
-    const EditInfo = async () =>{
+    const EditInfo = async () => {
         const auth = getAuth();
-        const newInfo = await User.updateInfo(displayName,gender,age,height, auth.currentUser.uid);
+        const newInfo = await User.updateInfo(displayName, gender, age, height, auth.currentUser.uid);
         console.log(newInfo);
         setUserData(newInfo);
         infoHandler(newInfo);   //Sets the new userInfo in the parent component
@@ -75,50 +75,56 @@ function Profile({ navigation,props }) {
                         style={styles.userImg}
                         source={require('../assets/Larry.png')}
                     />
-                    <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
-                    <Text style={styles.titleBar}> Age: {userData ? userData.age : "0"} </Text>
-                    <Text style={styles.titleBar}> Gender: {userData ? userData.gender : "Person"} </Text>
-                    <Text style={styles.titleBar}> Height: {userData ? userData.height : "0"} </Text>
-                    <Text style = {{fontSize: 20, fontWeight: 'bold', marginTop: 20, textAlign: 'center',justifyContent: "space-between",}}>Friends: </Text> 
-                    <FriendChart/>
+                    <View style={styles.userInfo}>
+                        <Text style={styles.userName}> {userData ? userData.displayName : "User Name"} </Text>
+                        <Text style={styles.titleBar}> Age: {userData ? userData.age : "0"} </Text>
+                        <Text style={styles.titleBar}> Gender: {userData ? userData.gender : "Person"} </Text>
+                        <Text style={styles.titleBar}> Height: {userData ? userData.height : "0"} </Text>
+                    </View>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, textAlign: 'center', justifyContent: "space-between", }}>Friends: </Text>
+                    <FriendChart />
 
                 </View>
 
                 <View>
-                <Modal visible={edit}>
-                <View style={styles.container}>
-                    
-                    <Text style={{ fontSize: 36, padding: 10 }}>Profile Edit</Text>
-                    <TextInput
-                        style={styles.inputContainer}
-                        placeholder='UserName'
-                        onChangeText={text => setUsername(text)}
-                    />
-                    <TextInput
-                        style={styles.inputContainer}
-                        placeholder='Age'
-                        onChangeText={text => setAge(text)}
-                    />
-                    <TextInput
-                        style={styles.inputContainer}
-                        placeholder='Gender'
-                        onChangeText={text => setGender(text)}
-                    />
-                    <TextInput
-                        style={styles.inputContainer}
-                        placeholder='Height'
-                        onChangeText={text => setHeight(text)}
-                    />
+                    <Modal visible={edit}>
+                        <View style={styles.container}>
 
-                    <Button title='exit' onPress={() => setEdit(false)} />
-                    <Button title='Save' onPress={() => {
-                        EditInfo();
-                        setRefresh();
-                        setEdit(false);
-                    }}/>
+                            <Text style={{ fontSize: 36, padding: 10 }}>Profile Edit</Text>
+                            <TextInput
+                                style={styles.inputContainer}
+                                placeholder='UserName'
+                                onChangeText={text => setUsername(text)}
+                                placeholderTextColor='gray'
+                            />
+                            <TextInput
+                                style={styles.inputContainer}
+                                placeholder='Age'
+                                onChangeText={text => setAge(text)}
+                                placeholderTextColor='gray'
+                            />
+                            <TextInput
+                                style={styles.inputContainer}
+                                placeholder='Gender'
+                                onChangeText={text => setGender(text)}
+                                placeholderTextColor='gray'
+                            />
+                            <TextInput
+                                style={styles.inputContainer}
+                                placeholder='Height'
+                                onChangeText={text => setHeight(text)}
+                                placeholderTextColor='gray'
+                            />
+
+                            <Button title='exit' onPress={() => setEdit(false)} />
+                            <Button title='Save' onPress={() => {
+                                EditInfo();
+                                setRefresh();
+                                setEdit(false);
+                            }} />
+                        </View>
+                    </Modal>
                 </View>
-            </Modal>
-            </View>
 
             </ScrollView>
         </SafeAreaView>
@@ -126,10 +132,10 @@ function Profile({ navigation,props }) {
 
     );
 
-    
+
 }
 const FriendChart = () => {
-    return(
+    return (
         <View style={styles.graphHolder}>
 
         </View>
@@ -153,6 +159,7 @@ const styles = StyleSheet.create({
         width: 150,
         borderRadius: 75,
         marginTop: 20,
+        borderWidth: 1
     },
     button: {
         position: 'absolute',
@@ -184,7 +191,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: 200,
         padding: 8,
-        marginVertical: 10
+        marginVertical: 10,
+        borderRadius: 15,
+        backgroundColor: 'white',
+        color: 'black',
     },
     graphHolder: {
         flex: 1,
@@ -201,6 +211,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#E8CCBF',
     },
+    userInfo: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        borderWidth: 1,
+        width: screenWidth * 0.5,
+        margin: 20,
+        padding: 10
+    }
 });
 
 export default Profile;

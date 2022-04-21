@@ -1,5 +1,8 @@
 import { StyleSheet, Text, View, Button, Dimensions, TextInput, ScrollView, TouchableOpacity, Modal } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import User from '../database/user';
+import { getAuth } from 'firebase/auth';
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -16,6 +19,21 @@ function ExerciseRoutines() {
         })
     }
 
+    useEffect( async () => {
+        if(!userInfo) {
+            const auth = getAuth();
+            const userData = await User.getUserInfo(auth.currentUser.uid); //Pulls user info from the firebase
+            setUserInfo(userData);
+            setRoutines(userData.workOuts);
+        }
+        console.log("Here is the routineNameText: ", routineNameText);
+        console.log("Here is the nameText: ", nameText);
+        console.log("Here is the repText: ", repText);
+        console.log("Here is the setText: ", setText);
+        console.log("Here are the routines: ", routines);
+    })
+
+    const [userInfo, setUserInfo] = useState(null);
     const [nameText, setNameText] = useState('');
     const [repText, setRepText] = useState('');
     const [setText, setSetText] = useState('');
@@ -35,7 +53,7 @@ function ExerciseRoutines() {
         setRoutineNameText(val);
     };
 
-    const submitAddWorkoutHandler = (name, reps, sets, routineName) => {
+    const submitAddWorkoutHandler = async (name, reps, sets, routineName) => {
         // checks if fields are empty
         if (name && reps && sets)
 
@@ -44,7 +62,11 @@ function ExerciseRoutines() {
                 ...prevRoutines,
             ]
             tempRoutines.find(routine => routine.name === routineName)?.workouts.push({ name, reps, sets })
-
+            console.log("Here are the routines in the submitAddWorkoutHandler: ", tempRoutines);
+            // tempRoutines.map(routine => {
+            //     User.addRoutines(routine, userInfo.uid)
+            // })
+            User.addRoutines(tempRoutines, userInfo.uid);
             return tempRoutines;
         })
     }
@@ -55,6 +77,7 @@ function ExerciseRoutines() {
                 ...prevRoutines,
             ]
             tempRoutines.push({ name: routineName, workouts: [] })
+            console.log("Here are the routines in the submitAddRoutineHandler: ", tempRoutines);
             return tempRoutines
         })
     }
@@ -90,6 +113,7 @@ function ExerciseRoutines() {
             console.log(prevRoutines)
             return [ ...prevRoutines ]
         })
+        User.removeRoutines(routineName, userInfo.uid);
     }
 
     const deleteRoutine = (routineName) => {

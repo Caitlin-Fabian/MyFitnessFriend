@@ -54,27 +54,28 @@ function LoginScreen(props) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ marginTop: 50 }}>
+        <View style={styles.card}>
+          <View style={styles.header}>
+            <Image source={require('../assets/logo1.png')}
+              resizeMode='contain'
+              style={{
+                width: 150,
+                height: 150,
+                marginTop: 50
+              }} />
+          </View>
+          <View style={styles.form}>
+            <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.input} value={email} />
+            <TextInput placeholder="Password" onChangeText={(password) => setPassword(password)} secureTextEntry={true} style={styles.input} value={password} />
+            <View style={styles.buttonHolder}>
+              <TouchableOpacity style={styles.button} onPress={() => signIn()}>
+                <Text style={{ textAlign: 'center'}}>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navButton} onPress={() => props.navigation.navigate('RegistrationScreen')}>
+                <Text style={{ textAlign: 'center' }}>Create an Account</Text>
+              </TouchableOpacity>
 
-        <View style={styles.header}>
-          <Image source={require('../assets/logo1.png')}
-            resizeMode='contain'
-            style={{
-              width: 150,
-              height: 150,
-              marginTop: 50
-            }} />
-        </View>
-        <View style={styles.form}>
-          <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.input} value={email} />
-          <TextInput placeholder="Password" onChangeText={(password) => setPassword(password)} secureTextEntry={true} style={styles.input} value={password} />
-          <View style={styles.buttonHolder}>
-            <TouchableOpacity style={styles.button} onPress={() => signIn()}>
-              <Text style={{ textAlign: 'center', flex: 1 }}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navButton} onPress={() => props.navigation.navigate('RegistrationScreen')}>
-              <Text style={{ textAlign: 'center', flex: 1 }}>Create an Account</Text>
-            </TouchableOpacity>
-
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -136,6 +137,23 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 150
+  },
+  card: {
+    backgroundColor: "#E8CCBF",
+    alignItems: 'center',
+    width: screenWidth*0.9,
+    height: screenHeight*0.7,
+    marginTop: 20,
+    borderRadius: 15,
+    borderColor: 'black',
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 2,
+      height: 4
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   }
 })
 

@@ -87,14 +87,39 @@ class User {
 
     //This function will take in the routines in the form {RoutineName: xxx, Workouts: [{workout_name: xxx, sets: xx, reps: xx}]}
     static async addRoutines(data, uid) {
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+      if(docSnap.exists()) {
+        const userData = docSnap.data();
+        for(let routines of userData.workOuts) {
+          if(routines.name === data.name) {
+            await updateDoc(docRef, {workOuts: arrayRemove(routines)});
+          }
+        }
+        await updateDoc(docRef, {workOuts: data});
+      } else {
+        console.log("Cannot find doc with the UID");
+      }
+    }
 
+    static async removeRoutines(routineName, uid) {
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+      if(docSnap.exists()) {
+        const userData = docSnap.data();
+        for(let routines of userData.workOuts) {
+          if(routines.name === routineName) {
+            await updateDoc(docRef, {workOuts: arrayRemove(routines)});
+          }
+        }
+
+      }
     }
 
     static async updateInfo(name,gender,age,height, uid){
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
       if(docSnap.exists()){
-        console.log("hello");
         await updateDoc(docRef, {displayName: name, gender: gender, age: age, height: height});
         const docData = await getDoc(docRef);
         return docData.data();

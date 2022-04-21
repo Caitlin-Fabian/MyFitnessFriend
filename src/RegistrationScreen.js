@@ -37,27 +37,29 @@ function RegistrationScreen(props) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={{ marginTop: 50 }}>
-        <View style={styles.header}>
-          <Image source={require('../assets/logo1.png')}
-            resizeMode='contain'
-            style={{
-              width: 150,
-              height: 150,
-              marginTop: 50
-            }} />
-        </View>
-        <View style={styles.form}>
-          <TextInput placeholder="Username" onChangeText={(username) => setUsername(username)} style={styles.input} value={username} />
-          <TextInput placeholder="Password" secureTextEntry={true} onChangeText={(password) => setPassword(password)} style={styles.input} value={password} />
-          <TextInput placeholder="Confirm Password" secureTextEntry={true} onChangeText={(password) => setConfPassword(password)} style={styles.input} value={confirmPassword} />
-          <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.input} value={email} />
-          <View style={styles.buttonHolder}>
-            <TouchableOpacity style={styles.button} onPress={() => register()}>
-              <Text style={{ textAlign: 'center', flex: 1 }}>Register</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navButton} onPress={() => props.navigation.navigate('LoginScreen')}>
-              <Text style={{ textAlign: 'center', flex: 1 }}>Have an account?  Login Here!</Text>
-            </TouchableOpacity>
+        <View style={styles.card}>
+          <View style={styles.header}>
+            <Image source={require('../assets/logo1.png')}
+              resizeMode='contain'
+              style={{
+                width: 150,
+                height: 150,
+                marginTop: 50
+              }} />
+          </View>
+          <View style={styles.form}>
+            <TextInput placeholder="Username" onChangeText={(username) => setUsername(username)} style={styles.input} value={username} />
+            <TextInput placeholder="Password" secureTextEntry={true} onChangeText={(password) => setPassword(password)} style={styles.input} value={password} />
+            <TextInput placeholder="Confirm Password" secureTextEntry={true} onChangeText={(password) => setConfPassword(password)} style={styles.input} value={confirmPassword} />
+            <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.input} value={email} />
+            <View style={styles.buttonHolder}>
+              <TouchableOpacity style={styles.button} onPress={() => register()}>
+                <Text style={{ textAlign: 'center' }}>Register</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.navButton} onPress={() => props.navigation.navigate('LoginScreen')}>
+                <Text style={{ textAlign: 'center' }}>Have an account?{'\n'}Login Here!</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -120,6 +122,23 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 150
+  },
+  card: {
+    backgroundColor: "#E8CCBF",
+    alignItems: 'center',
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.8,
+    marginTop: 20,
+    borderRadius: 15,
+    borderColor: 'black',
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 2,
+      height: 4
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   }
 })
 
